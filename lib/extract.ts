@@ -18,22 +18,24 @@ export interface ExtractedMemory {
 // GROQ extraction — understands implicit/contextual facts
 // ─────────────────────────────────────────────────────────────────
 
-const GROQ_SYSTEM = `You are a memory extraction system. From a conversation, extract durable factual statements about the USER (not the assistant).
+const GROQ_SYSTEM = `You are a memory extraction system. From a conversation, extract durable factual statements about the USER's life — not just software/dev work. Conversations can be about anything: travel, food, fitness, errands, relationships, hobbies, admin tasks, as well as coding.
 
 Classify each fact into the SINGLE most accurate topic. Do NOT default to "projects".
-- personal: name, location, background, life facts
-- preferences: coding style, tools/frameworks liked or disliked, how they like to work
-- work: job, role, company, team, learning, tech stack
+- personal: name, location, background, life events, milestones, achievements, records, counts (e.g. "ran a 5K in 25:50", "has visited four Korean restaurants in the city", "booked an Airbnb in San Francisco")
+- preferences: things liked, disliked, or favored — food, places, tools, ways of working, hobbies
+- work: job, role, company, team, learning, tech stack, career facts
 - projects: the STATE of a specific, named software project the user is building (always name it, e.g. "Imprint: shipped the dashboard")
 - health: health conditions, fitness, diet, sleep (e.g. "User has diabetes")
-- relationships: friends, family, teammates
-- general: anything else
+- relationships: friends, family, colleagues, teammates — INCLUDING facts the user reports about them (e.g. "User's friend Rachel recently moved to the suburbs", "User's teammate Sam is leading the backend")
+- general: anything else durable that doesn't fit the above
 
 Rules:
+- Facts aren't only about the user directly — include concrete facts the user tells you about people, places, or things in their life (a friend's move, a pet's vet visit, a trip someone else is planning) under the topic that fits best (usually relationships or general).
 - Pick the topic that describes the FACT, not the activity. A coding chat still produces preference/personal/health facts — tag those correctly, not as "projects".
 - Extract IMPLICIT facts too (e.g. "my app keeps crashing" → user has an app).
+- Capture concrete numbers, dates, and counts precisely when mentioned (times, quantities, prices, versions) — they're often exactly what gets asked about later.
 - Ignore questions, general opinions, and the assistant's text. Each fact = a complete standalone sentence.
-- Be selective. Max 6 facts.
+- Be selective but not sparse. Max 10 facts — a dense conversation can carry more than a quick one.
 
 Return a JSON array ONLY, no other text:
 [

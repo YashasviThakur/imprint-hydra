@@ -51,6 +51,22 @@ function parseHaystackDate(d: string): string {
 }
 
 const ABSTAIN_THRESHOLD = 1; // min shared keyword tokens to answer instead of abstaining
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+// Global pacing gate (not per-call sleeps) — every call into Groq, across every
+// instance in the run, waits until at least LLM_CALL_DELAY_MS has passed since
+// the last one. A per-instance-only delay wasn't enough: rate-limit pressure
+// accumulates across the whole run, and a single 429 makes extraction silently
+// fall back to regex (lib/extract.ts swallows the failure), which looked like
+// a prompt bug until traced back to this.
+const LLM_CALL_DELAY_MS = 2500;
+let lastLLMCallAt = 0;
+async function paceLLMCall(): Promise<void> {
+  if (!GROQ_KEY) return;
+  const wait = lastLLMCallAt + LLM_CALL_DELAY_MS - Date.now();
+  if (wait > 0) await sleep(wait);
+  lastLLMCallAt = Date.now();
+}
 
 async function runInstance(inst: Instance) {
   const userId = inst.question_id;
@@ -63,6 +79,7 @@ async function runInstance(inst: Instance) {
     await ensureSession(userId, sessionId, ts);
 
     const turns = inst.haystack_sessions[i].map((t) => ({ role: t.role, content: t.content }));
+    await paceLLMCall();
     const extracted = await extractMemories(turns, GROQ_KEY);
 
     const existing = await getCurrentFactsForUser(userId, 1000);
@@ -73,6 +90,7 @@ async function runInstance(inst: Instance) {
 
       // Best-effort contradiction check -> SUPERSEDES edge (no-ops cleanly without an LLM key)
       if (GROQ_KEY && existing.length) {
+        await paceLLMCall();
         const hits = await detectSemanticContradictions(
           [{ content: fact.content, topic: fact.topic }],
           existing.map((e) => ({ memoryId: e.key, content: e.content, topic: e.topic })),
@@ -102,6 +120,7 @@ async function runInstance(inst: Instance) {
     predicted = "[ABSTAIN] not enough information";
     abstained = true;
   } else if (GROQ_KEY) {
+    await paceLLMCall();
     const facts = candidateFacts
       .map((f) => `- [${f.ts}] ${f.content}`)
       .join("\n");
