@@ -40,3 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 mcp/node_modules/
+
+# downloaded benchmark data (see scripts/benchmark-longmemeval.ts for the fetch URL)
+scripts/data/
