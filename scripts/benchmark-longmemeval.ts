@@ -1,8 +1,6 @@
 /**
  * LongMemEval harness — proves the ingest -> graph store -> retrieve -> answer/abstain
- * -> score pipeline end to end, against lib/hydra-mock.ts (swap to lib/hydra.ts once
- * HydraDB's MATCH+CREATE limitation is resolved — same function signatures, one import
- * line to change).
+ * -> score pipeline end to end, against the real HydraDB (lib/hydra.ts).
  *
  * Without GROQ_API_KEY set, extraction falls back to regex (lib/extract.ts) and there's
  * no LLM to phrase answers, so this run is a plumbing check, not a real accuracy number —
@@ -21,8 +19,8 @@ import {
   linkEntity,
   linkSupersedes,
   getCurrentFactsForUser,
-  resetMockStore,
-} from "../lib/hydra-mock";
+  closeHydraDriver,
+} from "../lib/hydra";
 
 interface Turn { role: string; content: string; has_answer?: boolean }
 interface Instance {
@@ -68,13 +66,18 @@ async function paceLLMCall(): Promise<void> {
   lastLLMCallAt = Date.now();
 }
 
-async function runInstance(inst: Instance) {
-  const userId = inst.question_id;
-  resetMockStore(); // isolate each instance (mock store is process-global)
+async function runInstance(inst: Instance, runId: string) {
+  // HydraDB is real, persistent storage now (not the mock) — every id is a
+  // deterministic hash of {type}:{key}, and MERGE requires an exact property
+  // match to reuse a node rather than create a new one. Rerunning the harness
+  // without a per-run namespace would collide with a prior run's nodes under
+  // the same hashed id (LLM output isn't perfectly deterministic between
+  // runs), so runId scopes every session/memory key to this run only.
+  const userId = `${runId}:${inst.question_id}`;
 
   let factCount = 0;
   for (let i = 0; i < inst.haystack_sessions.length; i++) {
-    const sessionId = inst.haystack_session_ids[i];
+    const sessionId = `${runId}:${inst.haystack_session_ids[i]}`;
     const ts = parseHaystackDate(inst.haystack_dates[i]);
     await ensureSession(userId, sessionId, ts);
 
@@ -166,6 +169,7 @@ async function runInstance(inst: Instance) {
 
 async function main() {
   const count = Number(process.argv[2]) || 8;
+  const runId = `run${Date.now().toString(36)}${Math.floor(Math.random() * 1e6).toString(36)}`;
   const raw = fs.readFileSync(path.join(__dirname, "data/longmemeval_oracle.json"), "utf-8");
   const all: Instance[] = JSON.parse(raw);
 
@@ -179,7 +183,7 @@ async function main() {
 
   const results = [];
   for (const inst of sample) {
-    const r = await runInstance(inst);
+    const r = await runInstance(inst, runId);
     results.push(r);
     console.log(`[${r.correct ? "OK" : "MISS"}] (${r.type}) ${r.id}`);
     console.log(`  Q: ${r.question}`);
@@ -194,6 +198,7 @@ async function main() {
   console.log("─".repeat(60));
   console.log(`Overall: ${correctCount}/${results.length} correct (proxy scoring, not official autoeval)`);
   console.log(`Abstention: ${absCorrect}/${absCases.length} correctly abstained`);
+  await closeHydraDriver();
 }
 
 main().catch((err) => {
