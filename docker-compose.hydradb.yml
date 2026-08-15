@@ -1,0 +1,70 @@
+services:
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: hydraadmin
+      MINIO_ROOT_PASSWORD: hydra-local-dev-secret
+    volumes:
+      - minio-data:/data
+
+  minio-init:
+    image: minio/mc:latest
+    depends_on:
+      - minio
+    entrypoint: /bin/sh
+    # MERGE needs conditional/optimistic-concurrency PUT support, which the
+    # plain local-filesystem object store doesn't implement — MinIO (S3-
+    # compatible) does. See lib/hydra.ts's top comment for the full story.
+    command: >
+      -c "until mc alias set local http://minio:9000 hydraadmin hydra-local-dev-secret; do sleep 1; done &&
+          mc mb -p local/hydradb-graph"
+
+  hydradb-init:
+    image: busybox:latest
+    volumes:
+      - hydradb-cache:/data
+    entrypoint: /bin/sh
+    command: >
+      -c "mkdir -p /data/cache &&
+          [ -f /data/auth-token ] || printf '%s\n' 'local-development-token-32-bytes' > /data/auth-token"
+
+  hydradb:
+    image: ghcr.io/hydra-db/hydradb:latest
+    depends_on:
+      minio-init:
+        condition: service_completed_successfully
+      hydradb-init:
+        condition: service_completed_successfully
+    ports:
+      - "7687:7687"
+      - "8443:8443"
+      - "9090:9090"
+    volumes:
+      - hydradb-cache:/data
+    environment:
+      CLOUD_PROVIDER: aws
+      AWS_BUCKET_NAME: hydradb-graph
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_ENDPOINT: http://minio:9000
+      AWS_ALLOW_HTTP: "true"
+      AWS_ACCESS_KEY_ID: hydraadmin
+      AWS_SECRET_ACCESS_KEY: hydra-local-dev-secret
+      GRAPH_NAMESPACE: default
+      GRAPH_ID: default
+      GRAPH_CELL_ID: cell-0
+      GRAPH_CELLS: cell-0
+      GRAPH_NODE_ID: node-0
+      GRAPH_BOLT_NODE_ADDRESSES: node-0=127.0.0.1:7687
+      GRAPH_ADVERTISED_BOLT_ADDR: 127.0.0.1:7687
+      GRAPH_DATA_CACHE_DIR: /data/cache
+      GRAPH_AUTH_TOKEN_FILE: /data/auth-token
+      GRAPH_ALLOW_PLAINTEXT: "true"
+      RUST_MIN_STACK: "33554432"
+
+volumes:
+  minio-data:
+  hydradb-cache:
