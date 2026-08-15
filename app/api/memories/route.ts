@@ -6,6 +6,7 @@ import { rankMemories } from "@/lib/rank";
 import { getMemoryPool, invalidateMemoryPool } from "@/lib/pool";
 import { embed, cosineSimilarity } from "@/lib/embeddings";
 import { optimizeContext } from "@/lib/context-optimizer";
+import { mirrorToHydra } from "@/lib/hydra-sync";
 import type { Memory } from "@/lib/dynamodb";
 
 // Merge all pinned memories into a result set (pinned first, de-duplicated by id).
@@ -251,6 +252,17 @@ export async function POST(req: NextRequest) {
         );
       }
 
+      await mirrorToHydra({
+        memoryId: memory.memoryId,
+        userId,
+        content: memory.content,
+        topic: memory.topic,
+        createdAt: memory.createdAt,
+        confidence: memory.confidence,
+        keywords: memory.keywords,
+        contradicts: contradictions.map(c => ({ existingMemoryId: c.existingMemoryId, reason: c.explanation })),
+      });
+
       invalidateMemoryPool(userId);
       return NextResponse.json({ memory: lite([memory])[0], contradictions });
     }
@@ -297,6 +309,23 @@ export async function POST(req: NextRequest) {
           confidence: m.confidence,
           source: source || "web",
           embedding: embeddings[i],
+        })
+      )
+    );
+
+    await Promise.all(
+      saved.map((m, i) =>
+        mirrorToHydra({
+          memoryId: m.memoryId,
+          userId,
+          content: m.content,
+          topic: m.topic,
+          createdAt: m.createdAt,
+          confidence: m.confidence,
+          keywords: m.keywords,
+          contradicts: contradictions
+            .filter(c => c.newMemoryClientId === String(i))
+            .map(c => ({ existingMemoryId: c.existingMemoryId, reason: c.explanation })),
         })
       )
     );
