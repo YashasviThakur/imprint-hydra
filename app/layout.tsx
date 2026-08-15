@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import AuthSessionProvider from "./session-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Imprint — Paid memory for AI agents, settled on Casper",
-  description: "Give AI agents a persistent memory they pay for. Store and recall context via x402 micropayments in CSPR, settled on Casper. MCP-native.",
+  title: "Imprint × HydraDB — graph-backed agent memory",
+  description: "Persistent memory for AI agents, rebuilt on HydraDB's graph engine for cross-session recall, overwritten facts, and correct abstention. Built for Hack Hydra.",
 };
 
 export default function RootLayout({
@@ -27,7 +28,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} antialiased`}
     >
-      <body>{children}</body>
+      <body><AuthSessionProvider>{children}</AuthSessionProvider></body>
     </html>
   );
 }
