@@ -7,18 +7,18 @@ const VIDEO_CARDS = [
   {
     videoUrl:
       "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4",
-    tag: "Pay-per-memory (x402)",
-    title: "402 Payment Required, Answered",
+    tag: "Memory Storage",
+    title: "AWS DynamoDB + Groq Extraction",
     description:
-      "The agent calls an endpoint, gets a 402 with a price, signs an x402 micro-payment in CSPR, and receives the write — machine-to-machine, no accounts or API keys.",
+      "Memories are extracted by Groq's llama-3.3-70b in real-time and stored in serverless DynamoDB — pinned facts, topic filters, and contradiction detection built in.",
   },
   {
     videoUrl:
       "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260324_151826_c7218672-6e92-402c-9e45-f1e0f454bdc4.mp4",
-    tag: "On-chain receipts",
-    title: "Settled on Casper",
+    tag: "Session Management",
+    title: "Amazon DynamoDB Isolation",
     description:
-      "Every store and recall settles as a CSPR transaction on the Casper network, producing an on-chain receipt you can verify on testnet.cspr.live. Pay-per-use, never a subscription.",
+      "State storage utilizing low-latency serverless Amazon DynamoDB tables for instant execution. Complete user control over encryption keys and memory pruning.",
   },
 ];
 
@@ -27,19 +27,19 @@ const ICON_CARDS = [
     glyph: "◈",
     anim: "sync",
     color: "#4EECD8",
-    tag: "MCP-native tools",
-    title: "save_memory · search_memories",
+    tag: "Real-time Sync",
+    title: "Cross-IDE Memory Graph",
     description:
-      "Agents plug in over the Model Context Protocol. Calling save_memory or search_memories signs and settles the payment under the hood — the agent just calls a tool, wherever it runs: Claude Code, Cursor, Codex, or Antigravity.",
+      "Every memory saved — whether from Claude Code, Cursor, Codex, or Antigravity — lands in the same DynamoDB table. A live dashboard polls every 3 seconds, animating new memories as they arrive.",
   },
   {
     glyph: "◎",
     anim: "semantic",
     color: "#4285F4",
-    tag: "Semantic recall",
-    title: "Embeddings + Cosine Similarity",
+    tag: "Semantic Retrieval",
+    title: "Jina Embeddings + Relevance Ranking",
     description:
-      "Every memory is embedded and recalled by cosine similarity, so each session pulls the context relevant to the query — not just the most recent. Replay-protected payments keep writes persistent across sessions.",
+      "Jina AI embeds every memory at 1024 dimensions, so each session pulls the memories relevant to what you're asking — not just the most recent. Pinned facts are always injected, and duplicate saves are merged automatically.",
   },
 ];
 
@@ -111,7 +111,7 @@ export default function ServicesSection() {
           >
             Core Pipeline
           </h2>
-          <span className="hidden md:block text-white/40 text-sm">x402 · Casper · MCP</span>
+          <span className="hidden md:block text-white/40 text-sm">AWS Native · Jina AI · Groq</span>
         </div>
 
         {/* Video cards */}

@@ -6,36 +6,36 @@ import { motion, useInView, AnimatePresence } from "framer-motion";
 const TIERS = [
   {
     number: "01",
-    tag: "Pay-Per-Memory",
-    title: "Priced per call",
+    tag: "Unified Memory",
+    title: "One store, every tool",
     description:
-      "Imprint charges a CSPR micro-amount each time your agent saves or recalls a memory — settled on Casper via x402. No subscription, no human billing, no API keys. The agent signs, pays, and gets its context.",
-    cta: "See how it settles →",
-    href: "#try",
+      "Imprint sits beneath every coding agent and browser AI you use. Claude Code, Cursor, Codex, and Antigravity all draw from the same memory — your projects, preferences, and context travel with you, no matter which IDE you open.",
+    cta: "See how it connects →",
+    href: "#install",
     accent: "#4eecd8",
-    detail: "x402 · settled on Casper",
+    detail: "One DynamoDB store · all tools share it",
     steps: [
-      { n: "✦", label: "Agent requests a memory", code: "GET /memory → 402 Payment Required + price" },
-      { n: "✦", label: "Agent signs an x402 payment", code: "Signs a CSPR micro-payment, no human in the loop" },
-      { n: "✦", label: "Memory embedded & stored", code: "Text → embedding → persisted for semantic recall" },
-      { n: "✦", label: "On-chain receipt returned", code: "Casper tx hash → verify on testnet.cspr.live" },
+      { n: "✦", label: "Claude Code remembers", code: "get_memories → injects context at session start" },
+      { n: "✦", label: "Cursor picks up where you left off", code: "Same memory store, different editor" },
+      { n: "✦", label: "Codex & Antigravity too", code: "Every MCP agent reads and writes the same store" },
+      { n: "✦", label: "All writes go to one place", code: "save_memory → DynamoDB → available everywhere" },
     ],
   },
   {
     number: "02",
-    tag: "MCP · x402",
-    title: "Every agent, one call",
+    tag: "MCP · All IDEs",
+    title: "Every coding agent",
     description:
-      "Install the MCP server once. Any agent that speaks MCP gets paid-memory tools; each call settles on Casper. Set IMPRINT_MODE and go.",
+      "Install the MCP server once. Register it with Claude Code, Cursor, Codex, Antigravity — or any IDE that speaks MCP. Set IMPRINT_PLATFORM and every agent silently recalls your full context at session start.",
     cta: "Install MCP →",
-    href: "#try",
+    href: "https://github.com/YashasviThakur/imprint#mcp-server-setup",
     accent: "#cf8f6d",
-    detail: "Claude Code · Cursor · Codex · any MCP agent",
+    detail: "Claude Code · Cursor · Codex · Antigravity · Custom",
     steps: [
-      { n: "1", label: "Clone & install once", code: "cd casper-hackathon/imprint-agent && npm install" },
-      { n: "2", label: "Register with the agent's IDE", code: "claude mcp add imprint -- node /path/to/server.js\n# or add to .cursor/mcp.json, codex.json, etc." },
-      { n: "3", label: "Point it at Casper", code: "IMPRINT_MODE=x402\nIMPRINT_API_BASE=https://your-endpoint" },
-      { n: "4", label: "The agent pays as it remembers", code: "save_memory / search_memories settle on Casper —\neach call signs its own x402 payment" },
+      { n: "1", label: "Clone & install once", code: "cd mcp && npm install" },
+      { n: "2", label: "Register with your IDE", code: "claude mcp add imprint -- node /path/to/server.js\n# or add to .cursor/mcp.json, codex.json, etc." },
+      { n: "3", label: "Tag the platform", code: "IMPRINT_PLATFORM=cursor   # or claude-code, codex…\nIMPRINT_USER_ID=your-id" },
+      { n: "4", label: "Switch IDEs freely", code: "All agents share the same memory store —\nswitch editors without losing context" },
     ],
   },
 ];
@@ -89,10 +89,10 @@ export default function TiersSection() {
             className="text-3xl md:text-5xl text-white tracking-tight"
             style={{ fontFamily: "'Instrument Serif', serif" }}
           >
-            One paid memory layer,{" "}
-            <em className="italic text-white/40 font-light">every agent.</em>
+            One memory layer,{" "}
+            <em className="italic text-white/40 font-light">every coding agent.</em>
           </motion.h2>
-          <span className="hidden md:block text-white/30 text-sm">Priced per call</span>
+          <span className="hidden md:block text-white/30 text-sm">One store, all tools</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">

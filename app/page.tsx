@@ -8,8 +8,8 @@ import ServicesSection from "./components/ServicesSection";
 import BuiltWithSection from "./components/BuiltWithSection";
 import BackgroundVideo from "./components/BackgroundVideo";
 import TiersSection from "./components/TiersSection";
+import InstallSection from "./components/InstallSection";
 import QuickStartSection from "./components/QuickStartSection";
-import LiveDemoSection from "./components/LiveDemoSection";
 
 export default function Home() {
   return (
@@ -21,10 +21,10 @@ export default function Home() {
 
       <div className="relative z-10" style={{ animation: "fadeInContent 0.8s ease 0.6s both" }}>
         <HeroSection />
-        <LiveDemoSection />
         <QuickStartSection />
         <AboutSection />
         <TiersSection />
+        <InstallSection />
         <FeaturedVideoSection />
         <PhilosophySection />
         <BuiltWithSection />

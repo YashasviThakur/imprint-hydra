@@ -6,22 +6,22 @@ const STEPS = [
   {
     num: "01",
     time: "30 sec",
-    title: "Connect your agent",
-    desc: "Add one MCP config. Your agent gets save_memory & search_memories tools.",
+    title: "Sign in",
+    desc: "Create your free Imprint account. No credit card, no install yet.",
     color: "#cf8f6d",
   },
   {
     num: "02",
-    time: "per call",
-    title: "It pays as it remembers",
-    desc: "Each store or recall signs an x402 payment in CSPR — no account, no card.",
+    time: "60 sec",
+    title: "Connect your IDE",
+    desc: "Paste one config block into Claude Code, Cursor, or Codex. MCP activates instantly.",
     color: "#4EECD8",
   },
   {
     num: "03",
-    time: "on-chain",
-    title: "Context that settles",
-    desc: "Memories persist across sessions; every write leaves a receipt on Casper.",
+    time: "Forever",
+    title: "AI remembers you",
+    desc: "Switch IDEs, start a new chat — your full context is always there, automatically.",
     color: "#a78bfa",
   },
 ];
@@ -49,7 +49,7 @@ export default function QuickStartSection() {
               </h2>
             </div>
             <a
-              href="#try"
+              href="/login"
               className="flex items-center gap-3 rounded-full px-6 py-3 text-sm font-medium self-start md:self-auto group transition-all"
               style={{
                 background: "rgba(207,143,109,0.12)",
@@ -103,7 +103,7 @@ export default function QuickStartSection() {
           </div>
 
           <p className="text-white/15 text-xs text-center mt-6 tracking-wide">
-            x402 · Casper · CSPR · MCP
+            Claude Code · Cursor · Codex · Antigravity · VS Code · Windsurf
           </p>
         </div>
       </div>

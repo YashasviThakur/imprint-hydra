@@ -30,24 +30,22 @@ export default function FeaturedVideoSection() {
           <div className="absolute bottom-0 left-0 right-0 px-8 md:px-16 py-8 md:py-12 flex flex-col md:flex-row justify-between items-end gap-6">
             <div className="liquid-glass rounded-2xl p-6 md:p-8 max-w-md">
               <p className="text-white/50 text-xs tracking-widest uppercase mb-3">
-                PAY-TO-REMEMBER, SETTLED ON CASPER
+                REAL-TIME EDGE SYNCHRONIZATION
               </p>
               <p className="text-white text-sm md:text-base leading-relaxed">
-                Watch an agent buy its own memory: it hits the endpoint, gets a
-                402, signs an x402 payment in CSPR, and stores the context —
-                then pays again to recall it, each write leaving an on-chain
-                receipt.
+                As you work with your AI assistant, Imprint&apos;s background
+                engine streams message vectors directly into an isolated AWS serverless
+                database, creating a permanent recall layer.
               </p>
             </div>
 
-            <motion.a
-              href="#try"
+            <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="liquid-glass rounded-full px-8 py-3 text-white text-sm font-medium flex-shrink-0 cursor-pointer"
             >
-              See it settle →
-            </motion.a>
+              Deploy Stack
+            </motion.button>
           </div>
         </motion.div>
       </div>

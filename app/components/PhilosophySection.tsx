@@ -17,9 +17,9 @@ export default function PhilosophySection() {
           className="text-5xl md:text-7xl lg:text-8xl text-white tracking-tight mb-16 md:mb-24"
           style={{ fontFamily: "'Instrument Serif', serif" }}
         >
-          Autonomy{" "}
+          Infrastructure{" "}
           <em className="italic text-white/40 font-light">x</em>{" "}
-          Economy.
+          Intelligence.
         </motion.h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
@@ -48,13 +48,13 @@ export default function PhilosophySection() {
           >
             <div>
               <p className="text-white/40 text-xs tracking-widest uppercase mb-4">
-                Memory As A Paid Primitive
+                Decoupled Architecture
               </p>
               <p className="text-white/70 text-base md:text-lg leading-relaxed">
-                Memory becomes something an agent buys, not something a human
-                provisions. With Imprint, an agent stores and recalls its own context by
-                signing an x402 micro-payment in CSPR — no account, no API key, and no
-                human standing between the agent and what it remembers.
+                By separating state from the raw model layer, Imprint makes your AI
+                assistant natively stateful. We deploy specialized database nodes inside your
+                private cloud, ensuring your operational context never enters public
+                training loops.
               </p>
             </div>
 
@@ -62,13 +62,12 @@ export default function PhilosophySection() {
 
             <div>
               <p className="text-white/40 text-xs tracking-widest uppercase mb-4">
-                Settled On Casper
+                Serverless Hydration
               </p>
               <p className="text-white/70 text-sm md:text-base leading-relaxed">
-                Every store and recall is a machine-to-machine transaction: the agent
-                calls an MCP tool, pays per use, and each write settles on Casper as an
-                on-chain receipt. When agents can pay for their own memory, they become
-                truly autonomous economic actors.
+                When a prompt is initialized, our Vercel Edge middleware performs a
+                semantic vector lookup across AWS, injecting highly relevant historical
+                schemas into the prompt context prior to model generation.
               </p>
             </div>
           </motion.div>

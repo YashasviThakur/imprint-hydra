@@ -20,7 +20,7 @@ export default function AboutSection() {
           transition={{ duration: 0.6 }}
           className="text-white/40 text-sm tracking-widest uppercase mb-4"
         >
-          THE AGENT MEMORY GAP
+          THE COGNITIVE GAP
         </motion.p>
         <motion.h2
           initial={{ opacity: 0, y: 40 }}
@@ -29,11 +29,11 @@ export default function AboutSection() {
           className="text-4xl md:text-6xl lg:text-7xl text-white leading-[1.1] tracking-tight"
           style={{ fontFamily: "'Instrument Serif', serif" }}
         >
-          <em className="italic text-white/60 font-light">Agents can transact on their own</em>{" "}
-          yet{" "}
+          <em className="italic text-white/60 font-light">LLMs forget conversations</em>{" "}
+          when{" "}
           <br className="hidden md:block" />
           <em className="italic text-white/60 font-light">
-            forget everything between sessions. Imprint fixes that.
+            the context window resets. We fixed that.
           </em>
         </motion.h2>
       </div>

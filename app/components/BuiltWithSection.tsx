@@ -14,57 +14,57 @@ function GithubIcon({ size = 16 }: { size?: number }) {
 const WHY_ITEMS = [
   {
     label: "The Problem",
-    text: "AI agents are becoming autonomous economic actors, yet they have no persistent memory — and no way to pay for one without human accounts, API keys, or subscriptions.",
+    text: "AI coding assistants forget everything the moment the context window resets. Every new session starts blind — no memory of who you are, what you're building, or how you think.",
   },
   {
     label: "The Fix",
-    text: "Imprint gives every agent a memory it buys for itself. It stores and recalls context by signing an x402 micro-payment settled on Casper — no accounts, no human in the loop.",
+    text: "Imprint captures lasting facts from every session, across every IDE, and stores them in a serverless AWS database. Next session, your assistant already knows you.",
   },
   {
     label: "The Edge",
-    text: "Every write returns an on-chain payment receipt on Casper. Pure machine-to-machine commerce, priced per call — no other memory layer settles like this.",
+    text: "Real-time contradiction detection flags when you say something that conflicts with your own memory — no other memory tool does this.",
   },
 ];
 
 const STACK = [
   {
-    name: "Casper Network",
-    role: "Settlement L1 · on-chain receipts",
+    name: "Next.js 16",
+    role: "App + API layer",
     bg: "rgba(255,255,255,0.03)",
     accent: "#ffffff",
     icon: "▲",
   },
   {
-    name: "x402",
-    role: "HTTP-native micropayment protocol",
+    name: "Vercel Edge",
+    role: "Global deployment",
     bg: "rgba(255,255,255,0.03)",
     accent: "#ffffff",
     icon: "⬡",
   },
   {
-    name: "CSPR",
-    role: "Micro-amounts, priced per call",
+    name: "AWS DynamoDB",
+    role: "Memory storage",
     bg: "rgba(255,153,0,0.05)",
     accent: "#ff9900",
     icon: "◈",
   },
   {
-    name: "Model Context Protocol",
-    role: "How agents plug in & call tools",
+    name: "Groq API",
+    role: "llama-3.3-70b · fast extraction",
     bg: "rgba(249,115,22,0.05)",
     accent: "#f97316",
     icon: "⚡",
   },
   {
-    name: "Semantic embeddings",
-    role: "Vector recall · cosine similarity",
+    name: "Jina Embeddings",
+    role: "1024-dim semantic retrieval",
     bg: "rgba(78,236,216,0.05)",
     accent: "#4eecd8",
     icon: "◎",
   },
   {
-    name: "casper-js-sdk",
-    role: "Ed25519 signing · Node / Express RPC",
+    name: "AES-256 BYOK",
+    role: "End-to-end key encryption",
     bg: "rgba(249,217,122,0.04)",
     accent: "#f9d97a",
     icon: "⬡",
@@ -99,8 +99,8 @@ export default function BuiltWithSection() {
           className="text-4xl md:text-5xl lg:text-6xl text-white leading-[1.1] tracking-tight mb-14"
           style={{ fontFamily: "'Instrument Serif', serif" }}
         >
-          Your agent is autonomous.<br />
-          <em className="italic text-white/45 font-light">It just can't remember a thing.</em>
+          Your AI is brilliant.<br />
+          <em className="italic text-white/45 font-light">It just forgets you exist.</em>
         </motion.h2>
 
         <div className="grid md:grid-cols-3 gap-5 mb-24">
@@ -135,8 +135,8 @@ export default function BuiltWithSection() {
           className="text-3xl md:text-4xl text-white tracking-tight mb-10"
           style={{ fontFamily: "'Instrument Serif', serif" }}
         >
-          On-chain settlement,{" "}
-          <em className="italic text-white/40 font-light">no human in the loop.</em>
+          Production-grade infrastructure,{" "}
+          <em className="italic text-white/40 font-light">zero ops.</em>
         </motion.h3>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-14">
@@ -168,7 +168,7 @@ export default function BuiltWithSection() {
           className="flex flex-wrap items-center gap-4"
         >
           <a
-            href="https://github.com/YashasviThakur/casper-hackathon"
+            href="https://github.com/YashasviThakur/Imprint"
             target="_blank"
             rel="noopener noreferrer"
             className="liquid-glass rounded-full px-6 py-2.5 flex items-center gap-2.5 text-white/70 hover:text-white text-sm font-medium transition-all hover:bg-white/[0.04]"
@@ -177,10 +177,10 @@ export default function BuiltWithSection() {
             View source on GitHub
           </a>
           <a
-            href="#try"
+            href="/chat"
             className="text-white/35 hover:text-white/65 text-sm transition-colors"
           >
-            See how it works →
+            Try chat →
           </a>
         </motion.div>
       </div>

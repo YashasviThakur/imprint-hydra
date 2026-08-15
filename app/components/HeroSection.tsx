@@ -37,7 +37,7 @@ export default function HeroSection() {
               Built With
             </a>
             <a
-              href="https://github.com/YashasviThakur/casper-hackathon"
+              href="https://github.com/YashasviThakur/imprint-hydra"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-white/65 hover:text-white text-sm font-medium transition-colors"
@@ -55,32 +55,33 @@ export default function HeroSection() {
           className="text-7xl md:text-8xl lg:text-9xl text-white tracking-tight leading-none"
           style={{ fontFamily: "'Instrument Serif', serif" }}
         >
-          Your agent{" "}
+          Leave an{" "}
           <em
             className="italic font-light text-transparent bg-clip-text"
             style={{ backgroundImage: "linear-gradient(135deg, #d4a85a 0%, #b8864a 50%, #9e6e3a 100%)" }}
-          >pays</em>
-          {" "}to{" "}
+          >imprint</em>
+          {" "}on your{" "}
           <span
             className="text-transparent bg-clip-text"
             style={{ backgroundImage: "linear-gradient(135deg, #5bbfb0 0%, #3d9e90 50%, #2a7a6e 100%)" }}
           >
-            remember.
+            IDEs.
           </span>
         </h1>
 
         <p className="max-w-2xl text-white/70 text-sm md:text-base leading-relaxed my-8 px-4">
-          Imprint is the paid memory layer for AI agents. Your agent stores and recalls context by signing an x402 micro-payment in CSPR — settled on Casper. No accounts, no API keys. Automatic capture, semantic recall, on-chain receipts.
+          One persistent memory layer for Claude Code, Cursor, Codex, Antigravity — and every MCP-capable IDE.
+          Automatic capture. Semantic recall. Real-time contradiction detection. Your full context, everywhere you build.
         </p>
 
         {/* Primary CTA */}
         <div className="flex flex-col sm:flex-row items-center gap-4 mt-2">
           <a
-            href="#try"
+            href="/login"
             className="liquid-glass rounded-full pl-6 pr-2 py-2 flex items-center gap-4 hover:bg-white/5 transition-colors group"
           >
             <span className="text-white text-sm font-medium">
-              Give your agent a paid memory
+              Connect your IDE to its brain
             </span>
             <span className="bg-white rounded-full p-3 text-black group-hover:bg-white/90 transition-colors flex-shrink-0">
               <ArrowRight size={18} />
@@ -92,11 +93,11 @@ export default function HeroSection() {
 
       {/* Social footer */}
       <div className="relative z-10 flex flex-wrap justify-center gap-4 md:gap-6 pb-12 text-xs text-white/40 px-6">
-        <span>x402 Micropayments</span>
+        <span>Vercel AI SDK Integration</span>
         <span>•</span>
-        <span>Settled on Casper</span>
+        <span>AWS Serverless Infrastructure</span>
         <span>•</span>
-        <span>MCP-Native</span>
+        <span>Sub-100ms Hydration</span>
       </div>
     </div>
   );

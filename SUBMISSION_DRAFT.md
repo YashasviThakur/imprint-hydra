@@ -48,9 +48,11 @@ fact and answer confidently with it. Here that's structurally impossible —
 the graph, not the prompt, decides what's current.
 
 **Deployed project link**
-[fill in if you deploy this fork — otherwise leave blank; the existing
-Imprint product is live at imprint-ebon.vercel.app, but this HydraDB fork
-runs locally per the README]
+https://imprint-hydra.vercel.app — note: HydraDB itself runs via a local
+Docker + ngrok tunnel (see README's "Deploying" section), so the app is only
+fully functional (dual-write, /api/ask-graph) while that tunnel is up. Check
+it's live before sharing, or fall back to the demo video if the tunnel isn't
+running at judging time.
 
 **Tech stack**
 Next.js 16 (App Router) · HydraDB (Bolt via neo4j-driver) · AWS DynamoDB ·
