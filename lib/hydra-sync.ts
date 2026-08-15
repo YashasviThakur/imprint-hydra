@@ -1,4 +1,4 @@
-import { ensureSession, saveMemory, linkEntity, linkSupersedes } from "./hydra";
+import { ensureSession, saveMemory, linkEntity, linkSupersedes } from "./hydra-client";
 
 // Best-effort mirror of a saved memory into the HydraDB graph, alongside the
 // existing DynamoDB write. Dual-write, not a replacement: DynamoDB stays the

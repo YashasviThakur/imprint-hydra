@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCurrentFactsForUser } from "@/lib/hydra";
+import { getCurrentFactsForUser } from "@/lib/hydra-client";
 import { llmComplete } from "@/lib/llm";
 import { requireOwner } from "@/lib/authz";
 

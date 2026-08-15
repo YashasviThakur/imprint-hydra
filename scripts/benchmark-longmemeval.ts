@@ -169,8 +169,13 @@ async function runInstance(inst: Instance, runId: string) {
 
 async function main() {
   const count = Number(process.argv[2]) || 8;
+  const full = process.argv.includes("--full");
   const runId = `run${Date.now().toString(36)}${Math.floor(Math.random() * 1e6).toString(36)}`;
-  const raw = fs.readFileSync(path.join(__dirname, "data/longmemeval_oracle.json"), "utf-8");
+  // --full = the actual scale the track brief describes (~40 sessions, ~115K
+  // tokens/question) vs. the default oracle file (evidence sessions only,
+  // much faster to iterate on).
+  const dataFile = full ? "data/longmemeval_s_cleaned.json" : "data/longmemeval_oracle.json";
+  const raw = fs.readFileSync(path.join(__dirname, dataFile), "utf-8");
   const all: Instance[] = JSON.parse(raw);
 
   // Sample: a mix of abstention + knowledge-update + everything-else instances.

@@ -2,7 +2,7 @@
 // ask-graph retrieval/answer path), bypassing only the pre-existing Next.js
 // HTTP/auth/DynamoDB plumbing this environment has no credentials to run.
 import { mirrorToHydra } from "../lib/hydra-sync";
-import { getCurrentFactsForUser, closeHydraDriver } from "../lib/hydra";
+import { getCurrentFactsForUser, closeHydraDriver } from "../lib/hydra-client";
 import { llmComplete } from "../lib/llm";
 
 const userId = `app-integration-test-${Date.now()}`;
