@@ -10,6 +10,7 @@ import BackgroundVideo from "./components/BackgroundVideo";
 import TiersSection from "./components/TiersSection";
 import InstallSection from "./components/InstallSection";
 import QuickStartSection from "./components/QuickStartSection";
+import GraphModelSection from "./components/GraphModelSection";
 
 export default function Home() {
   return (
@@ -23,6 +24,7 @@ export default function Home() {
         <HeroSection />
         <QuickStartSection />
         <AboutSection />
+        <GraphModelSection />
         <TiersSection />
         <InstallSection />
         <FeaturedVideoSection />

@@ -28,6 +28,13 @@ const WHY_ITEMS = [
 
 const STACK = [
   {
+    name: "HydraDB",
+    role: "Graph store · Bolt + HTTP · MERGE writes",
+    bg: "rgba(167,139,250,0.06)",
+    accent: "#a78bfa",
+    icon: "⌬",
+  },
+  {
     name: "Next.js 16",
     role: "App + API layer",
     bg: "rgba(255,255,255,0.03)",
