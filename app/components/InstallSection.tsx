@@ -240,12 +240,12 @@ function CopyButton({ text, accent }: { text: string; accent: string }) {
     <button
       onClick={() => { navigator.clipboard.writeText(text); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
       style={{
-        background: "var(--surface)", color: copied ? accent : "var(--ink-dim)",
-        padding: "10px 20px", borderRadius: 3, border: `1px solid ${copied ? accent : "var(--rule)"}`,
+        background: "rgba(255,255,255,0.05)", color: copied ? accent : "rgba(255,255,255,0.5)",
+        padding: "10px 20px", borderRadius: 10, border: `1px solid ${copied ? accent + "44" : "rgba(255,255,255,0.08)"}`,
         fontSize: 13, fontWeight: 500, cursor: "pointer", transition: "all 0.2s",
       }}
     >
-      {copied ? "Copied" : "Copy config"}
+      {copied ? "✓ Copied!" : "Copy config"}
     </button>
   );
 }
@@ -258,8 +258,11 @@ export default function InstallSection() {
   const tier = TIERS.find(t => t.id === active)!;
 
   return (
-    <section className="py-24 md:py-32 px-6 border-t" style={{ borderColor: "var(--rule)" }} ref={ref}>
-      <div className="max-w-5xl mx-auto">
+    <section className="py-28 md:py-36 px-6 relative overflow-hidden" ref={ref}>
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ background: "radial-gradient(ellipse 50% 40% at 50% 60%, rgba(78,236,216,0.04) 0%, transparent 70%)" }} />
+
+      <div className="max-w-5xl mx-auto relative z-10">
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -267,13 +270,14 @@ export default function InstallSection() {
           transition={{ duration: 0.7 }}
           className="mb-14"
         >
-          <p className="text-xs tracking-widest uppercase mb-4" style={{ color: "var(--ink-dim)", fontFamily: "var(--font-mono)" }}>Get started</p>
-          <h2 className="text-3xl md:text-5xl tracking-tight"
-            style={{ fontFamily: "var(--font-display)", color: "var(--ink)" }}>
-            Works in every AI coding tool.
+          <p className="text-xs tracking-widest uppercase text-white/30 mb-4">Get started</p>
+          <h2 className="text-3xl md:text-5xl text-white tracking-tight"
+            style={{ fontFamily: "'Instrument Serif', serif" }}>
+            Works in every{" "}
+            <em className="italic text-white/40 font-light">AI coding tool.</em>
           </h2>
-          <p style={{ marginTop: 16, fontSize: 14, color: "var(--ink-dim)", maxWidth: 480 }}>
-            One MCP server. Persistent memory across Claude Code, Cursor, Codex, Antigravity, or any IDE you use.
+          <p style={{ marginTop: 16, fontSize: 14, color: "rgba(255,255,255,0.3)", maxWidth: 480 }}>
+            One MCP server. Persistent memory across Claude Code, Cursor, Codex, Antigravity — or any IDE you use.
           </p>
         </motion.div>
 
@@ -290,10 +294,10 @@ export default function InstallSection() {
                 key={t.id}
                 onClick={() => setActive(t.id)}
                 style={{
-                  padding: "8px 18px", borderRadius: 3,
-                  border: `1px solid ${active === t.id ? t.accent : "var(--rule)"}`,
-                  background: active === t.id ? "var(--surface-2)" : "var(--surface)",
-                  color: active === t.id ? t.accent : "var(--ink-dim)",
+                  padding: "8px 18px", borderRadius: 100,
+                  border: `1px solid ${active === t.id ? t.accent + "99" : "rgba(255,255,255,0.18)"}`,
+                  background: active === t.id ? `${t.accent}28` : "rgba(255,255,255,0.07)",
+                  color: active === t.id ? t.accent : "rgba(255,255,255,0.72)",
                   fontSize: 13, fontWeight: active === t.id ? 600 : 400,
                   cursor: "pointer", transition: "all 0.2s",
                   display: "flex", alignItems: "center", gap: 7,
@@ -318,7 +322,8 @@ export default function InstallSection() {
           transition={{ duration: 0.35 }}
           className="grid grid-cols-1 md:grid-cols-5 gap-0 relative"
         >
-          <div className="hidden md:block absolute top-6 left-[10%] right-[10%] h-px" style={{ background: "var(--rule)" }} />
+          <div className="hidden md:block absolute top-6 left-[10%] right-[10%] h-px"
+            style={{ background: `linear-gradient(90deg, transparent, ${tier.accent}22, transparent)` }} />
 
           {tier.steps.map((step, i) => (
             <motion.div
@@ -330,9 +335,9 @@ export default function InstallSection() {
             >
               <div className="flex md:justify-center">
                 <div style={{
-                  width: 28, height: 28,
-                  background: "var(--surface)",
-                  border: `1px solid ${tier.accent}`,
+                  width: 32, height: 32, borderRadius: "50%",
+                  background: `${tier.accent}15`,
+                  border: `1px solid ${tier.accent}44`,
                   display: "flex", alignItems: "center", justifyContent: "center",
                   fontSize: 13, fontWeight: 700, color: tier.accent,
                   flexShrink: 0, position: "relative", zIndex: 1,
@@ -341,17 +346,17 @@ export default function InstallSection() {
                 </div>
               </div>
               <div>
-                <p style={{ fontSize: 12, fontWeight: 600, color: "var(--ink)", marginBottom: 8, lineHeight: 1.4 }}>
+                <p style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.7)", marginBottom: 8, lineHeight: 1.4 }}>
                   {step.title}
                 </p>
                 <pre style={{
                   fontSize: 10.5, lineHeight: 1.65,
-                  color: "var(--ink-dim)",
-                  background: "var(--bg)",
-                  border: "1px solid var(--rule)",
-                  borderRadius: 3, padding: "10px 12px",
+                  color: "rgba(255,255,255,0.35)",
+                  background: "rgba(0,0,0,0.4)",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                  borderRadius: 10, padding: "10px 12px",
                   whiteSpace: "pre-wrap", wordBreak: "break-word",
-                  margin: 0, fontFamily: "var(--font-mono)",
+                  margin: 0, fontFamily: "'Geist Mono', monospace",
                   minHeight: 64,
                 }}>
                   {step.code}
@@ -372,18 +377,18 @@ export default function InstallSection() {
             href="https://github.com/YashasviThakur/imprint/archive/refs/heads/main.zip"
             download
             style={{
-              background: tier.accent, color: "var(--bg)",
-              padding: "10px 24px", borderRadius: 3,
+              background: tier.accent, color: "#000",
+              padding: "10px 24px", borderRadius: 10,
               fontSize: 13, fontWeight: 600, textDecoration: "none",
               transition: "opacity 0.2s", display: "inline-flex", alignItems: "center", gap: 6,
             }}
             onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.opacity = "0.85"}
             onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.opacity = "1"}
           >
-            Download ZIP
+            ↓ Download ZIP
           </a>
           <CopyButton text={MCP_CONFIG(active)} accent={tier.accent} />
-          <span style={{ fontSize: 12, color: "var(--ink-dim)" }}>
+          <span style={{ fontSize: 12, color: "rgba(255,255,255,0.2)" }}>
             ~5 min setup
           </span>
         </motion.div>
@@ -393,12 +398,12 @@ export default function InstallSection() {
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
           transition={{ duration: 0.5, delay: 0.6 }}
-          style={{ marginTop: 16, fontSize: 12.5, color: "var(--ink-dim)", maxWidth: 620, lineHeight: 1.6 }}
+          style={{ marginTop: 16, fontSize: 12.5, color: "rgba(255,255,255,0.3)", maxWidth: 620, lineHeight: 1.6 }}
         >
-          <strong style={{ color: "var(--ink)" }}>Runs locally first.</strong>{" "}
-          Memories are stored on your machine (<code style={{ color: "var(--ink)" }}>~/.imprint</code>) and
-          work offline. <code style={{ color: "var(--ink)" }}>IMPRINT_USER_ID</code> is optional; add it and
-          flip <em>Sync on</em> in your dashboard to back up and sync to the cloud, or leave it on <em>Local only</em> and
+          <strong style={{ color: "rgba(255,255,255,0.5)" }}>Runs locally first.</strong>{" "}
+          Memories are stored on your machine (<code style={{ color: "rgba(255,255,255,0.45)" }}>~/.imprint</code>) and
+          work offline — <code style={{ color: "rgba(255,255,255,0.45)" }}>IMPRINT_USER_ID</code> is optional. Add it and
+          flip <em>Sync on</em> in your dashboard to back up and sync to the cloud; flip it to <em>Local only</em> and
           nothing leaves your computer.
         </motion.p>
 
@@ -408,14 +413,14 @@ export default function InstallSection() {
             initial={{ opacity: 0 }}
             animate={inView ? { opacity: 1 } : {}}
             transition={{ duration: 0.5, delay: 0.7 }}
-            style={{ marginTop: 20, fontSize: 12, color: "var(--ink-dim)" }}
+            style={{ marginTop: 20, fontSize: 12, color: "rgba(255,255,255,0.18)" }}
           >
             Your IDE not listed?{" "}
             <button
               onClick={() => setActive("custom")}
-              style={{ background: "none", border: "none", color: "var(--ink-dim)", cursor: "pointer", fontSize: 12, textDecoration: "underline", padding: 0 }}
+              style={{ background: "none", border: "none", color: "rgba(255,255,255,0.35)", cursor: "pointer", fontSize: 12, textDecoration: "underline", padding: 0 }}
             >
-              Any MCP-compatible tool works
+              Any MCP-compatible tool works →
             </button>
           </motion.p>
         )}

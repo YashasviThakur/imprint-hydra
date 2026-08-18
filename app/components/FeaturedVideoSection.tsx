@@ -28,24 +28,24 @@ export default function FeaturedVideoSection() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
           <div className="absolute bottom-0 left-0 right-0 px-8 md:px-16 py-8 md:py-12 flex flex-col md:flex-row justify-between items-end gap-6">
-            <div className="p-6 md:p-8 max-w-md border" style={{ background: "var(--surface)", borderColor: "var(--rule)", borderRadius: 3 }}>
-              <p className="text-xs tracking-widest uppercase mb-3" style={{ color: "var(--ink-dim)", fontFamily: "var(--font-mono)" }}>
-                Real-time write path
+            <div className="liquid-glass rounded-2xl p-6 md:p-8 max-w-md">
+              <p className="text-white/50 text-xs tracking-widest uppercase mb-3">
+                REAL-TIME EDGE SYNCHRONIZATION
               </p>
-              <p className="text-sm md:text-base leading-relaxed" style={{ color: "var(--ink)" }}>
-                As you work with your AI assistant, Imprint&apos;s background engine extracts
-                facts and writes them into the graph, linked to the session and entity they
-                belong to, so recall is a traversal, not a guess.
+              <p className="text-white text-sm md:text-base leading-relaxed">
+                As you work with your AI assistant, Imprint&apos;s background
+                engine streams message vectors directly into an isolated AWS serverless
+                database, creating a permanent recall layer.
               </p>
             </div>
 
-            <a
-              href="/chat"
-              className="px-8 py-3 text-sm font-medium flex-shrink-0 border transition-colors"
-              style={{ background: "var(--surface)", borderColor: "var(--rule)", color: "var(--ink)", borderRadius: 3 }}
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="liquid-glass rounded-full px-8 py-3 text-white text-sm font-medium flex-shrink-0 cursor-pointer"
             >
-              Try it live
-            </a>
+              Deploy Stack
+            </motion.button>
           </div>
         </motion.div>
       </div>
