@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
-import { Pin, Trash2, Edit3, X, Plus, Download, Upload, Search, LogOut, RefreshCw, Link2, ChevronDown, ChevronRight, FolderPlus, Tag, Cloud, CloudOff, Camera, Check } from "lucide-react";
+import { Pin, Trash2, Edit3, X, Plus, Download, Upload, Search, LogOut, RefreshCw, Link2, ChevronDown, ChevronRight, FolderPlus, Tag, Cloud, CloudOff, Camera, Check, Share2 } from "lucide-react";
 import ImprintLogo from "@/app/components/ImprintLogo";
 import BackgroundVideo from "@/app/components/BackgroundVideo";
 
@@ -2154,6 +2154,9 @@ export default function Dashboard() {
             <span>{syncEnabled ? "Sync on" : "Local only"}</span>
           </button>
         )}
+        <Link href="/dashboard/graph" className="hbtn" title="Memory graph" style={{ display:"flex", alignItems:"center", gap:6, height:30, padding:"0 12px", borderRadius:8, background:"rgba(255,255,255,0.06)", border:"1px solid rgba(255,255,255,0.12)", color:"rgba(255,255,255,0.72)", fontSize:12.5, fontWeight:600, fontFamily:"inherit", textDecoration:"none", whiteSpace:"nowrap", transition:"all .15s" }}>
+          <Share2 size={14}/> Graph
+        </Link>
         <button className="hbtn" onClick={() => setShowConnect(true)} title="Connect your IDE" style={{ display:"flex", alignItems:"center", gap:6, height:30, padding:"0 12px", borderRadius:8, background:"rgba(94,234,212,0.14)", border:"1px solid rgba(94,234,212,0.45)", color:"#5EEAD4", fontSize:12.5, fontWeight:600, fontFamily:"inherit", cursor:"pointer", whiteSpace:"nowrap", transition:"all .15s" }}>
           <Link2 size={14}/> Connect
         </button>
