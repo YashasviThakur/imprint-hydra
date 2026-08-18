@@ -19,6 +19,8 @@ import {
   linkEntity,
   linkSupersedes,
   getCurrentFactsForUser,
+  getQueryStats,
+  resetQueryStats,
   closeHydraDriver,
 } from "../lib/hydra";
 
@@ -186,6 +188,7 @@ async function main() {
 
   console.log(`Running ${sample.length} instances (GROQ_API_KEY ${GROQ_KEY ? "present" : "absent -> regex extraction, no LLM answering"})\n`);
 
+  resetQueryStats(); // measure real HydraDB read/write cost for this run only
   const results = [];
   for (const inst of sample) {
     const r = await runInstance(inst, runId);
@@ -203,6 +206,14 @@ async function main() {
   console.log("─".repeat(60));
   console.log(`Overall: ${correctCount}/${results.length} correct (proxy scoring, not official autoeval)`);
   console.log(`Abstention: ${absCorrect}/${absCases.length} correctly abstained`);
+
+  const qs = getQueryStats();
+  const avg = (ms: number, n: number) => (n ? (ms / n).toFixed(1) : "n/a");
+  console.log(
+    `HydraDB cost: ${qs.reads} reads (avg ${avg(qs.readMs, qs.reads)}ms, ${qs.readMs}ms total), ` +
+    `${qs.writes} writes (avg ${avg(qs.writeMs, qs.writes)}ms, ${qs.writeMs}ms total)`
+  );
+
   await closeHydraDriver();
 }
 

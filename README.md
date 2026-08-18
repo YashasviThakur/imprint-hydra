@@ -47,6 +47,18 @@ everything HydraDB-related below.
   retrieve → answer/abstain → score, including explicit scoring of
   abstention instances (the official `evaluate_qa.py` skips those; this
   harness doesn't, since Track 03 calls abstention "the hard part").
+- **Read/write cost tracking + a `superseded` flag** — after reading HydraDB's
+  actual `cypher-compat.md` (not just inferring behavior from error messages),
+  found that plain `MATCH ... SET` on an already-matched node is supported.
+  `linkSupersedes` now flips a `superseded` property directly, so every read
+  is one query with a plain `WHERE` clause instead of two queries plus
+  client-side filtering against a fetched set of superseded keys. Query
+  timing is tracked per read/write and reported by the benchmark harness —
+  see the real numbers below, answering Track 03's "read and write cost that
+  would survive real usage" criterion, which had zero coverage before this.
+- **`getGraphStats`** — total current facts, superseded facts, and distinct
+  entities via HydraDB's `count()`/`collect()` aggregates, surfaced in
+  `/api/ask-graph`'s response.
 
 ## Why a graph here, not just a bigger vector index
 
@@ -94,14 +106,15 @@ npx tsx scripts/benchmark-longmemeval.ts 5 --full
 ## Full-scale benchmark result
 
 The 8-instance oracle-file run (evidence sessions only) hits 3/8 correct on a
-deliberately crude proxy scorer, 3/3 correct abstentions. Running the real
-`longmemeval_s_cleaned.json` scale (60–83 extracted facts per instance,
-matching the track brief's ~40-session/~115K-token description) is more
-revealing: the pipeline runs cleanly at that scale with no errors, and
-abstention stays correct, but real-answer accuracy drops — the answer step
-currently hands *every* current fact to an 8B model with no relevance
-ranking first, which is a real weakness at 60+ candidate facts and the
-obvious next thing to fix, not a database problem.
+deliberately crude proxy scorer, 3/3 correct abstentions, with real measured
+HydraDB cost: **25 reads averaging ~102ms, 176 writes averaging ~34ms** for
+the run. Running the real `longmemeval_s_cleaned.json` scale (60–83
+extracted facts per instance, matching the track brief's ~40-session/~115K-
+token description) is more revealing: the pipeline runs cleanly at that
+scale with no errors, and abstention stays correct, but real-answer accuracy
+drops — the answer step currently hands *every* current fact to an 8B model
+with no relevance ranking first, which is a real weakness at 60+ candidate
+facts and the obvious next thing to fix, not a database problem.
 
 ## A real HydraDB gotcha (v0.1.1, the exact release this hackathon ships)
 
@@ -118,10 +131,14 @@ OpenCypher engine — worth knowing if you're building on it too:
   (plain JS numbers passed as driver parameters serialize as floats and get
   rejected too — wrap with `neo4j.int()`). `lib/hydra.ts` hashes application
   keys into a 31-bit id and keeps the string as a separate `key` property.
-- **`WHERE NOT (pattern)` and whole-node `RETURN`** aren't supported yet —
-  `WHERE` only does property comparisons, and `RETURN` only does
-  `binding.property` or `count(*)`. "Is this memory superseded" is resolved
-  client-side; every read projects scalar fields explicitly.
+- **`WHERE NOT (pattern)` and whole-node `RETURN`** aren't supported —
+  `WHERE` only does property comparisons (`NOT` on a comparison is fine, just
+  not on a pattern's existence), and `RETURN` only does `binding.property` or
+  an aggregate (`count`, `sum`, `avg`, `collect` — `min`/`max` aren't
+  supported, and no `DISTINCT` inside an aggregate argument, so a distinct
+  count is `collect()` + a client-side `Set`). "Is this memory superseded"
+  is a plain `superseded` boolean property, flipped by `MATCH ... SET` — see
+  above.
 - **The default `CLOUD_PROVIDER=local` backend can't run `MERGE`** — its
   `LocalFileSystem` object store doesn't implement the conditional
   (`PutMode::Update`) writes `MERGE` needs. `docker-compose.hydradb.yml` runs
@@ -130,6 +147,16 @@ OpenCypher engine — worth knowing if you're building on it too:
   (arithmetic `SET n.x = n.x + 1` doesn't — literals only), so updates and
   deletes are possible even without `MERGE`'s `ON CREATE`/`ON MATCH` (also
   unsupported).
+- **`UNWIND` batches writes**, but narrower than it first looks: the
+  `MERGE`-based batch form only upserts a single bare vertex per row (`MERGE
+  (n {id: row.x}) SET ...`) — it rejects an edge pattern outright ("UNWIND
+  vertex MERGE requires exactly one node"). The `MATCH`-then-`CREATE` batch
+  form (shown in HydraDB's own docs) needs *both* relationship endpoints to
+  already exist via separate `MATCH` clauses — it can't attach a new node to
+  one existing anchor in a single batched write. Batching our
+  session→memory writes would need two round trips (batch-upsert the memory
+  vertices, then batch-attach them to the session), not the one hoped for;
+  not implemented here given the time left.
 
 ## Deploying (Vercel + HydraDB reachability)
 
@@ -167,10 +194,26 @@ would mean hosting HydraDB on something like Fly.io instead (persistent
 containers, a stable public address) — not done here for lack of a card to
 put on file with a hosting provider mid-hackathon.
 
+## A Groq gotcha, unrelated to HydraDB but worth flagging
+
+While debugging why the LLM answer step kept returning `null`, found that
+`llama-3.1-8b-instant` and `llama-3.3-70b` — the models this whole codebase's
+Groq calls were hardcoded to (extraction, contradiction detection, `/api/ask`,
+`/api/ask-graph`, semantic-search AI fallback, natural-language memory
+editing) — have been retired from Groq's lineup entirely (`model_not_found`,
+404). Every provider error in `lib/llm.ts` is caught and turned into a `null`
+return so the app degrades gracefully, which is good for resilience and bad
+for debugging: this was silently breaking every AI feature in the deployed
+app before this pass, with no visible error anywhere. Fixed across the board
+to `openai/gpt-oss-20b` / `openai/gpt-oss-120b` — Groq's current fast/cheap
+and versatile-tier equivalents — plus `reasoning_effort: "low"`, since the
+gpt-oss models emit hidden reasoning tokens that can consume the entire
+`max_tokens` budget before producing any visible content otherwise.
+
 ## Tech
 
 Next.js 16 (App Router) · HydraDB (Bolt via `neo4j-driver` locally, HTTP
-query API via a tunnel when deployed) · AWS DynamoDB · Groq (`llama-3.3-70b`
-extraction, `llama-3.1-8b-instant` answering) · Jina embeddings · NextAuth
-(Google OAuth). `docker-compose.hydradb.yml` runs HydraDB + MinIO for local
+query API via a tunnel when deployed) · AWS DynamoDB · Groq (`gpt-oss-120b`
+extraction, `gpt-oss-20b` answering) · Jina embeddings · NextAuth (Google
+OAuth). `docker-compose.hydradb.yml` runs HydraDB + MinIO for local
 development.

@@ -101,9 +101,12 @@ export async function POST(req: NextRequest) {
             method: "POST",
             headers: { Authorization: `Bearer ${groqKey}`, "Content-Type": "application/json" },
             body: JSON.stringify({
-              model: "llama-3.1-8b-instant",
+              // llama-3.1-8b-instant was retired from Groq's lineup; openai/gpt-oss-20b
+              // is the current fast/cheap equivalent. reasoning_effort caps its hidden
+              // reasoning tokens so they don't eat the whole max_tokens budget.
+              model: "openai/gpt-oss-20b",
               messages: [{ role: "system", content: system }, { role: "user", content: q }],
-              temperature: 0.2, max_tokens: 400, stream: true,
+              temperature: 0.2, max_tokens: 400, stream: true, reasoning_effort: "low",
             }),
           });
           if (!res.ok || !res.body) {

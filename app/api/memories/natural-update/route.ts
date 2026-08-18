@@ -46,7 +46,11 @@ export async function POST(req: NextRequest) {
       method: "POST",
       headers: { Authorization: `Bearer ${groqKey}`, "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "llama-3.3-70b-versatile",
+        // llama-3.3-70b-versatile was retired from Groq's lineup; openai/gpt-oss-120b
+        // is the current equivalent-tier model. reasoning_effort caps its hidden
+        // reasoning tokens so they don't eat the whole max_tokens budget.
+        model: "openai/gpt-oss-120b",
+        reasoning_effort: "low",
         messages: [
           {
             role: "system",

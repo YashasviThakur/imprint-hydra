@@ -50,7 +50,7 @@ const STACK = [
   },
   {
     name: "Groq API",
-    role: "llama-3.3-70b · fast extraction",
+    role: "gpt-oss-120b · fast extraction",
     bg: "rgba(249,115,22,0.05)",
     accent: "#f97316",
     icon: "⚡",

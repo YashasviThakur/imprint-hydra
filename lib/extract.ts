@@ -1,6 +1,6 @@
 /**
- * Smart memory extraction using Groq (free tier — llama-3.3-70b).
- * Falls back to regex patterns if Groq is unavailable or key not set.
+ * Smart memory extraction via lib/llm.ts's provider chain (Groq first).
+ * Falls back to regex patterns if every provider is unavailable or key not set.
  */
 
 import { llmComplete } from "./llm";

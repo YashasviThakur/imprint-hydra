@@ -125,10 +125,14 @@ export async function GET(req: NextRequest) {
             method: "POST",
             headers: { "Authorization": `Bearer ${process.env.GROQ_API_KEY}`, "Content-Type": "application/json" },
             body: JSON.stringify({
-              model: "llama-3.1-8b-instant",
+              // llama-3.1-8b-instant was retired from Groq's lineup; openai/gpt-oss-20b
+              // is the current fast/cheap equivalent. reasoning_effort caps its hidden
+              // reasoning tokens so they don't eat the whole max_tokens budget.
+              model: "openai/gpt-oss-20b",
               messages: [{ role: "user", content: `Query: "${semantic}"\n\nWhich of these memory entries are relevant to the query? Reply with ONLY comma-separated indices (e.g. "0,3,7") or the word "none":\n${candidates}` }],
               max_tokens: 60,
               temperature: 0,
+              reasoning_effort: "low",
             }),
           });
           const aiData = await aiRes.json();

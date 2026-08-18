@@ -19,7 +19,14 @@ export type LLMOpts = { temperature?: number; maxTokens?: number; json?: boolean
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 // Fast models per provider (cheap, high-rate-limit — fine for the tasks here).
-const GROQ_MODEL = "llama-3.1-8b-instant";
+// llama-3.1-8b-instant and llama-3.3-70b were retired from Groq's lineup at
+// some point after this was first written — every call was silently
+// returning null (llmComplete swallows provider errors and falls through),
+// masking a real "model_not_found" 404 as an unrelated-looking failure.
+// gpt-oss models default to emitting hidden reasoning tokens that can eat
+// the whole max_tokens budget before any visible content is produced
+// (content: "", finish_reason: "length") — reasoning_effort: "low" caps that.
+const GROQ_MODEL = "openai/gpt-oss-20b";
 const CEREBRAS_MODEL = "gpt-oss-120b";    // verified available on this Cerebras account (llama/qwen ids 404'd)
 const GEMINI_MODEL = "gemini-2.5-flash";  // 2.0-flash quota-exhausted; 2.5-flash has a separate quota
 
@@ -37,6 +44,7 @@ async function openaiCompatible(
           messages,
           temperature: opts.temperature ?? 0.2,
           max_tokens: opts.maxTokens ?? 400,
+          reasoning_effort: "low",
           ...(opts.json ? { response_format: { type: "json_object" } } : {}),
         }),
       });

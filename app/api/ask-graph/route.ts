@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCurrentFactsForUser } from "@/lib/hydra-client";
+import { getCurrentFactsForUser, getGraphStats } from "@/lib/hydra-client";
 import { llmComplete } from "@/lib/llm";
 import { requireOwner } from "@/lib/authz";
 
@@ -12,7 +12,7 @@ import { requireOwner } from "@/lib/authz";
 // back empty, we never call the LLM at all.
 //
 // POST { userId, query } → text/event-stream of:
-//   {type:"sources", sources:[{content,topic,ts}]}
+//   {type:"sources", sources:[{content,topic,ts}], stats:{currentFacts,supersededFacts,entities}}
 //   {type:"delta", text:"..."}   (repeated)
 //   {type:"done"}
 
@@ -32,16 +32,19 @@ export async function POST(req: NextRequest) {
     async start(controller) {
       const send = (o: unknown) => controller.enqueue(encoder.encode(`data: ${JSON.stringify(o)}\n\n`));
       try {
-        const facts = await getCurrentFactsForUser(userId, 500);
+        const [facts, stats] = await Promise.all([
+          getCurrentFactsForUser(userId, 500),
+          getGraphStats(userId).catch(() => null), // stats are a nice-to-have, never block the answer
+        ]);
 
         if (!facts.length) {
-          send({ type: "sources", sources: [] });
+          send({ type: "sources", sources: [], stats });
           send({ type: "delta", text: "You don't have any memories in the graph yet." });
           send({ type: "done" }); controller.close(); return;
         }
 
         const sources = facts.slice(-10).map((f) => ({ content: f.content, topic: f.topic, ts: f.ts }));
-        send({ type: "sources", sources });
+        send({ type: "sources", sources, stats });
 
         const factLines = facts.map((f) => `- [${f.ts}] ${f.content}`).join("\n");
         const system =

@@ -28,7 +28,7 @@ function findConflictPairs(memories: any[]): { a: any; b: any; reason: string; a
       if (other) {
         pairs.push({
           a: m, b: other,
-          reason: "Detected by semantic AI (Groq llama-3.3-70b pairwise comparison)",
+          reason: "Detected by semantic AI (Groq gpt-oss pairwise comparison)",
           aiDetected: true,
         });
       }

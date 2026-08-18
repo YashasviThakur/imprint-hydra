@@ -10,7 +10,7 @@ const VIDEO_CARDS = [
     tag: "Memory Storage",
     title: "AWS DynamoDB + Groq Extraction",
     description:
-      "Memories are extracted by Groq's llama-3.3-70b in real-time and stored in serverless DynamoDB — pinned facts, topic filters, and contradiction detection built in.",
+      "Memories are extracted by Groq's gpt-oss-120b in real-time and stored in serverless DynamoDB — pinned facts, topic filters, and contradiction detection built in.",
   },
   {
     videoUrl:

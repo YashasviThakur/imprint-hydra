@@ -10,7 +10,10 @@ export async function compressMemories(
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: "llama-3.3-70b-versatile",
+      // llama-3.3-70b-versatile was retired from Groq's lineup; openai/gpt-oss-120b
+      // is the current equivalent-tier model. reasoning_effort caps its hidden
+      // reasoning tokens so they don't eat the whole max_tokens budget.
+      model: "openai/gpt-oss-120b",
       messages: [
         {
           role: "system",
@@ -24,6 +27,7 @@ export async function compressMemories(
       ],
       temperature: 0.1,
       max_tokens: 200,
+      reasoning_effort: "low",
     }),
   });
   if (!res.ok) throw new Error(`Compress API error ${res.status}`);
