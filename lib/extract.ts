@@ -42,7 +42,12 @@ Return a JSON array ONLY, no other text:
   { "content": "User prefers tabs over spaces", "topic": "preferences", "keywords": ["tabs", "spaces"], "confidence": 0.9 }
 ]
 
-Use exactly one of these topics: work | personal | preferences | projects | health | relationships | general`;
+Use exactly one of these topics: work | personal | preferences | projects | health | relationships | general
+
+The response format requires a JSON *object* at the top level, not a bare
+array — wrap the array above in a "memories" key:
+{ "memories": [ { "content": "...", "topic": "...", "keywords": [...], "confidence": 0.9 } ] }
+If there's nothing worth remembering, return { "memories": [] }.`;
 
 export async function extractWithGroq(
   messages: { role: string; content: string }[],
@@ -69,7 +74,20 @@ export async function extractWithGroq(
     return [];
   }
 
-  const arr: any[] = Array.isArray(parsed) ? parsed : (parsed.memories || parsed.facts || Object.values(parsed)[0] || []);
+  // The model returns a JSON object or array — handle both shapes, and don't
+  // crash if the "first value" heuristic lands on something that isn't an
+  // array either (confirmed happening: json_object mode makes some models
+  // return a single bare memory object instead of the requested {memories:[]}
+  // wrapper — Object.values(parsed)[0] on that is a string, not an array,
+  // and .filter() on a string threw "not a function" in production).
+  const firstValue = Object.values(parsed)[0];
+  let arr: any[];
+  if (Array.isArray(parsed)) arr = parsed;
+  else if (Array.isArray(parsed.memories)) arr = parsed.memories;
+  else if (Array.isArray(parsed.facts)) arr = parsed.facts;
+  else if (Array.isArray(firstValue)) arr = firstValue;
+  else if (parsed.content && parsed.topic) arr = [parsed]; // single bare memory object
+  else arr = [];
 
   return arr
     .filter((m: any) => m.content && m.topic)
