@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentFactsForUser, getGraphStats } from "@/lib/hydra-client";
+import { rankByRelevance } from "@/lib/relevance";
 import { llmComplete } from "@/lib/llm";
 import { requireOwner } from "@/lib/authz";
 
@@ -7,14 +8,24 @@ import { requireOwner } from "@/lib/authz";
 // different retrieval: instead of a flat vector-cosine pool, this resolves
 // "current" facts by walking SUPERSEDES edges (built by app/api/memories'
 // mirrorToHydra dual-write) and grounds the answer explicitly in what the
-// graph actually contains, in timestamp order — the graph, not the prompt,
-// is what makes abstention correct here: if getCurrentFactsForUser comes
-// back empty, we never call the LLM at all.
+// graph actually contains — the graph, not the prompt, is what makes
+// abstention correct here: if getCurrentFactsForUser comes back empty, we
+// never call the LLM at all.
+//
+// At full scale a user can have dozens of current facts; handing all of them
+// to the model with no ranking is what the README documents as the real
+// accuracy weakness. rankByRelevance narrows to the most query-relevant
+// facts first (keyword overlap — HydraDB can't store embeddings as node
+// properties, only scalars), then that narrowed set is re-sorted back into
+// timestamp order for the prompt, since chronological questions need time
+// order, not relevance order.
 //
 // POST { userId, query } → text/event-stream of:
 //   {type:"sources", sources:[{content,topic,ts}], stats:{currentFacts,supersededFacts,entities}}
 //   {type:"delta", text:"..."}   (repeated)
 //   {type:"done"}
+
+const MAX_FACTS_FOR_ANSWER = 25;
 
 export const maxDuration = 30;
 
@@ -43,10 +54,16 @@ export async function POST(req: NextRequest) {
           send({ type: "done" }); controller.close(); return;
         }
 
-        const sources = facts.slice(-10).map((f) => ({ content: f.content, topic: f.topic, ts: f.ts }));
+        // Narrow to the most relevant facts, then put that narrowed set back
+        // in chronological order for the prompt.
+        const relevant = rankByRelevance(facts, q, MAX_FACTS_FOR_ANSWER)
+          .slice()
+          .sort((a, b) => (a.ts < b.ts ? -1 : 1));
+
+        const sources = relevant.slice(-10).map((f) => ({ content: f.content, topic: f.topic, ts: f.ts }));
         send({ type: "sources", sources, stats });
 
-        const factLines = facts.map((f) => `- [${f.ts}] ${f.content}`).join("\n");
+        const factLines = relevant.map((f) => `- [${f.ts}] ${f.content}`).join("\n");
         const system =
           "Answer the question using ONLY the facts below, which are current (not superseded by a later fact) " +
           "and ordered by timestamp. If the facts don't contain the answer, say plainly that you don't have " +

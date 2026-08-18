@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import ImprintLogo from "@/app/components/ImprintLogo";
-import BackgroundVideo from "@/app/components/BackgroundVideo";
 
 function GoogleIcon() {
   return (
@@ -33,12 +32,7 @@ export default function LoginPage() {
   if (status === "loading" || status === "authenticated") return null;
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ background: "#050505" }}>
-
-      {/* Background video — same as landing */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <BackgroundVideo overlayOpacity={0.52} />
-      </div>
+    <div className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ background: "var(--bg)" }}>
 
       <motion.div
         initial={{ opacity: 0, y: 24 }}
@@ -56,15 +50,14 @@ export default function LoginPage() {
         </motion.div>
 
         <h1
-          className="text-5xl text-white tracking-tight mb-3 leading-tight"
-          style={{ fontFamily: "'Instrument Serif', serif" }}
+          className="text-5xl tracking-tight mb-3 leading-tight"
+          style={{ fontFamily: "var(--font-display)", color: "var(--ink)" }}
         >
-          Leave an <em className="italic font-light text-transparent bg-clip-text"
-            style={{ backgroundImage: "linear-gradient(135deg, #d4a85a 0%, #b8864a 100%)" }}>imprint</em>.
+          Leave an <span style={{ color: "var(--brass)" }}>imprint</span>.
         </h1>
 
-        <p className="text-white/40 text-sm mb-10 max-w-xs leading-relaxed">
-          Persistent memory for Claude Code, Cursor, Codex — and every AI in your browser.
+        <p className="text-sm mb-10 max-w-xs leading-relaxed" style={{ color: "var(--ink-dim)" }}>
+          Persistent memory for Claude Code, Cursor, Codex, and every AI in your browser.
         </p>
 
         {/* Single CTA */}
@@ -72,14 +65,12 @@ export default function LoginPage() {
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
           onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-          className="flex items-center gap-3 px-6 py-3.5 rounded-full text-sm font-medium transition-all"
+          className="flex items-center gap-3 px-6 py-3.5 text-sm font-medium transition-all border"
           style={{
-            background: "rgba(255,255,255,0.10)",
-            border: "1px solid rgba(255,255,255,0.18)",
-            color: "#fff",
-            backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)",
-            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.4), 0 4px 24px rgba(0,0,0,0.3)",
+            background: "var(--surface)",
+            borderColor: "var(--rule)",
+            color: "var(--ink)",
+            borderRadius: 3,
             letterSpacing: "0.01em",
           }}
         >
@@ -89,9 +80,10 @@ export default function LoginPage() {
 
         <a
           href="/"
-          className="mt-10 text-white/20 hover:text-white/40 text-xs transition-colors tracking-wide"
+          className="mt-10 text-xs transition-colors tracking-wide"
+          style={{ color: "var(--ink-dim)" }}
         >
-          ← Back to Imprint
+          &larr; Back to Imprint
         </a>
       </motion.div>
     </div>

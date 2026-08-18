@@ -1,6 +1,5 @@
 "use client";
 
-import { ArrowRight, Layers } from "lucide-react";
 import ImprintLogo from "./ImprintLogo";
 
 function GithubIcon({ size = 16 }: { size?: number }) {
@@ -11,19 +10,52 @@ function GithubIcon({ size = 16 }: { size?: number }) {
   );
 }
 
+// The actual write model behind Imprint on HydraDB — not a decorative
+// diagram. (:Session)-[:CONTAINS]->(:Memory)-[:ABOUT]->(:Entity), with
+// SUPERSEDES edges linking a fact to the older one it replaces.
+function GraphDiagram() {
+  return (
+    <svg viewBox="0 0 640 220" width="100%" style={{ maxWidth: 640 }} aria-label="Graph schema: Session contains Memory, Memory is about Entity, newer Memory supersedes older Memory">
+      <line x1="90" y1="60" x2="300" y2="60" stroke="var(--rule)" strokeWidth="1" />
+      <line x1="300" y1="60" x2="520" y2="60" stroke="var(--rule)" strokeWidth="1" />
+      <line x1="300" y1="60" x2="300" y2="170" stroke="var(--rust)" strokeWidth="1" strokeDasharray="3 3" />
+      <line x1="300" y1="170" x2="300" y2="60" stroke="var(--rust)" strokeWidth="1" strokeDasharray="3 3" markerEnd="url(#arrow)" />
+
+      <defs>
+        <marker id="arrow" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+          <path d="M0,0 L7,3.5 L0,7 z" fill="var(--rust)" />
+        </marker>
+      </defs>
+
+      <text x="195" y="52" textAnchor="middle" fontFamily="var(--font-mono)" fontSize="10" fill="var(--ledger)">CONTAINS</text>
+      <text x="410" y="52" textAnchor="middle" fontFamily="var(--font-mono)" fontSize="10" fill="var(--ledger)">ABOUT</text>
+      <text x="330" y="118" textAnchor="start" fontFamily="var(--font-mono)" fontSize="10" fill="var(--rust)">SUPERSEDES</text>
+
+      <rect x="30" y="38" width="120" height="44" rx="2" fill="var(--surface)" stroke="var(--rule)" />
+      <text x="90" y="65" textAnchor="middle" fontFamily="var(--font-mono)" fontSize="12" fill="var(--ink)">:Session</text>
+
+      <rect x="240" y="38" width="120" height="44" rx="2" fill="var(--surface)" stroke="var(--brass)" />
+      <text x="300" y="65" textAnchor="middle" fontFamily="var(--font-mono)" fontSize="12" fill="var(--ink)">:Memory</text>
+
+      <rect x="460" y="38" width="120" height="44" rx="2" fill="var(--surface)" stroke="var(--rule)" />
+      <text x="520" y="65" textAnchor="middle" fontFamily="var(--font-mono)" fontSize="12" fill="var(--ink)">:Entity</text>
+
+      <rect x="240" y="148" width="120" height="44" rx="2" fill="var(--surface)" stroke="var(--brass)" strokeOpacity="0.5" />
+      <text x="300" y="175" textAnchor="middle" fontFamily="var(--font-mono)" fontSize="12" fill="var(--ink-dim)">:Memory (old)</text>
+    </svg>
+  );
+}
 
 export default function HeroSection() {
   return (
-    <div className="relative min-h-screen overflow-hidden flex flex-col justify-between">
-
-      {/* Navbar */}
-      <nav className="relative z-20 px-6 py-6">
-        <div className="liquid-glass rounded-full max-w-5xl mx-auto px-6 py-3 flex justify-between items-center">
+    <div className="relative min-h-screen overflow-hidden flex flex-col">
+      <nav className="relative z-20 px-6 py-5 border-b" style={{ borderColor: "var(--rule)" }}>
+        <div className="max-w-5xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <ImprintLogo size={28} />
+            <ImprintLogo size={24} />
             <span
-              className="text-white font-semibold text-lg tracking-tight"
-              style={{ fontFamily: "'Instrument Serif', serif" }}
+              className="text-lg tracking-tight"
+              style={{ fontFamily: "var(--font-display)", color: "var(--ink)" }}
             >
               Imprint
             </span>
@@ -31,16 +63,17 @@ export default function HeroSection() {
           <div className="hidden md:flex items-center gap-6">
             <a
               href="#stack"
-              className="flex items-center gap-1.5 text-white/65 hover:text-white text-sm font-medium transition-colors"
+              className="text-sm transition-colors"
+              style={{ color: "var(--ink-dim)" }}
             >
-              <Layers size={14} />
-              Built With
+              Built with
             </a>
             <a
               href="https://github.com/YashasviThakur/imprint-hydra"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-white/65 hover:text-white text-sm font-medium transition-colors"
+              className="flex items-center gap-2 text-sm transition-colors"
+              style={{ color: "var(--ink-dim)" }}
             >
               <GithubIcon size={15} />
               GitHub
@@ -49,55 +82,43 @@ export default function HeroSection() {
         </div>
       </nav>
 
-      {/* Hero content */}
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 py-12 text-center -translate-y-[10%]">
-        <h1
-          className="text-7xl md:text-8xl lg:text-9xl text-white tracking-tight leading-none"
-          style={{ fontFamily: "'Instrument Serif', serif" }}
-        >
-          Leave an{" "}
-          <em
-            className="italic font-light text-transparent bg-clip-text"
-            style={{ backgroundImage: "linear-gradient(135deg, #d4a85a 0%, #b8864a 50%, #9e6e3a 100%)" }}
-          >imprint</em>
-          {" "}on your{" "}
-          <span
-            className="text-transparent bg-clip-text"
-            style={{ backgroundImage: "linear-gradient(135deg, #5bbfb0 0%, #3d9e90 50%, #2a7a6e 100%)" }}
-          >
-            IDEs.
-          </span>
-        </h1>
-
-        <p className="max-w-2xl text-white/70 text-sm md:text-base leading-relaxed my-8 px-4">
-          One persistent memory layer for Claude Code, Cursor, Codex, Antigravity — and every MCP-capable IDE.
-          Automatic capture. Semantic recall. Real-time contradiction detection. Your full context, everywhere you build.
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 py-16 text-center">
+        <p className="text-xs tracking-[0.2em] uppercase mb-6" style={{ color: "var(--ledger)", fontFamily: "var(--font-mono)" }}>
+          Memory + Context Retrieval · Hack Hydra
         </p>
 
-        {/* Primary CTA */}
-        <div className="flex flex-col sm:flex-row items-center gap-4 mt-2">
-          <a
-            href="/login"
-            className="liquid-glass rounded-full pl-6 pr-2 py-2 flex items-center gap-4 hover:bg-white/5 transition-colors group"
-          >
-            <span className="text-white text-sm font-medium">
-              Connect your IDE to its brain
-            </span>
-            <span className="bg-white rounded-full p-3 text-black group-hover:bg-white/90 transition-colors flex-shrink-0">
-              <ArrowRight size={18} />
-            </span>
-          </a>
-        </div>
+        <h1
+          className="text-5xl md:text-7xl tracking-tight leading-[1.05] max-w-3xl"
+          style={{ fontFamily: "var(--font-display)", color: "var(--ink)" }}
+        >
+          Leave an <span style={{ color: "var(--brass)" }}>imprint</span> on every IDE your agent uses.
+        </h1>
 
+        <p className="max-w-xl text-sm md:text-base leading-relaxed my-8 px-4" style={{ color: "var(--ink-dim)" }}>
+          One memory graph for Claude Code, Cursor, Codex, and Antigravity. Facts are captured automatically,
+          linked to the entities they describe, and superseded (never deleted) when you tell your agent something new.
+        </p>
+
+        <a
+          href="/login"
+          className="flex items-center gap-3 px-6 py-3 text-sm transition-colors border"
+          style={{ borderColor: "var(--brass)", color: "var(--ink)", borderRadius: 3 }}
+        >
+          Connect your IDE
+          <span aria-hidden="true">&rarr;</span>
+        </a>
+
+        <div className="mt-16">
+          <GraphDiagram />
+        </div>
       </div>
 
-      {/* Social footer */}
-      <div className="relative z-10 flex flex-wrap justify-center gap-4 md:gap-6 pb-12 text-xs text-white/40 px-6">
-        <span>Vercel AI SDK Integration</span>
-        <span>•</span>
-        <span>AWS Serverless Infrastructure</span>
-        <span>•</span>
-        <span>Sub-100ms Hydration</span>
+      <div className="relative z-10 flex flex-wrap justify-center gap-4 md:gap-6 pb-10 text-xs px-6" style={{ color: "var(--ink-dim)", fontFamily: "var(--font-mono)" }}>
+        <span>HydraDB graph store</span>
+        <span>&middot;</span>
+        <span>MERGE-based writes</span>
+        <span>&middot;</span>
+        <span>SUPERSEDES resolution</span>
       </div>
     </div>
   );

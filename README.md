@@ -108,13 +108,26 @@ npx tsx scripts/benchmark-longmemeval.ts 5 --full
 The 8-instance oracle-file run (evidence sessions only) hits 3/8 correct on a
 deliberately crude proxy scorer, 3/3 correct abstentions, with real measured
 HydraDB cost: **25 reads averaging ~102ms, 176 writes averaging ~34ms** for
-the run. Running the real `longmemeval_s_cleaned.json` scale (60–83
-extracted facts per instance, matching the track brief's ~40-session/~115K-
-token description) is more revealing: the pipeline runs cleanly at that
-scale with no errors, and abstention stays correct, but real-answer accuracy
-drops — the answer step currently hands *every* current fact to an 8B model
-with no relevance ranking first, which is a real weakness at 60+ candidate
-facts and the obvious next thing to fix, not a database problem.
+the run.
+
+At the real `longmemeval_s_cleaned.json` scale (60-88 extracted facts per
+instance, matching the track brief's ~40-session/~115K-token description),
+the answer step now narrows to the 25 most query-relevant facts first
+(`lib/relevance.ts`, keyword overlap scored and ranked in application code)
+before calling the model, instead of handing it every current fact. HydraDB
+can't help with this ranking directly: property values are ints, floats,
+booleans, and strings only, with no array/list type
+(`cypher-compat.md`), so a fact's embedding can't be stored on the node and
+searched in the graph.
+
+A 3-instance full-scale run hit a real scale limit before this narrowing
+mattered: `linkEntity` failed with `client_query_runtime exceeded query
+timeout after 29999ms` partway through instance one, once the graph had
+accumulated enough nodes from prior facts in the same run. A 2-instance run
+completed cleanly: 1/2 correct on the proxy scorer, 1/1 correct abstention,
+real cost **97 reads averaging ~221ms, 590 writes averaging ~31ms**. The
+30-second query timeout at high node counts is a genuine v0.1.1 scale
+limit worth flagging, not a bug in this integration.
 
 ## A real HydraDB gotcha (v0.1.1, the exact release this hackathon ships)
 

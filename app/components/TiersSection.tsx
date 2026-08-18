@@ -3,66 +3,66 @@
 import { useRef, useState } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 
-const TIERS = [
+const PANELS = [
   {
     number: "01",
-    tag: "Unified Memory",
+    tag: "Unified memory",
     title: "One store, every tool",
     description:
-      "Imprint sits beneath every coding agent and browser AI you use. Claude Code, Cursor, Codex, and Antigravity all draw from the same memory — your projects, preferences, and context travel with you, no matter which IDE you open.",
-    cta: "See how it connects →",
+      "Imprint sits beneath every coding agent you use. Claude Code, Cursor, Codex, and Antigravity all draw from the same memory graph, so your projects, preferences, and context travel with you no matter which IDE you open.",
+    cta: "See how it connects",
     href: "#install",
-    accent: "#4eecd8",
-    detail: "One DynamoDB store · all tools share it",
+    accent: "var(--brass)",
+    detail: "One HydraDB graph, all tools share it",
     steps: [
-      { n: "✦", label: "Claude Code remembers", code: "get_memories → injects context at session start" },
-      { n: "✦", label: "Cursor picks up where you left off", code: "Same memory store, different editor" },
-      { n: "✦", label: "Codex & Antigravity too", code: "Every MCP agent reads and writes the same store" },
-      { n: "✦", label: "All writes go to one place", code: "save_memory → DynamoDB → available everywhere" },
+      { n: "1", label: "Claude Code remembers", code: "get_memories -> injects context at session start" },
+      { n: "2", label: "Cursor picks up where you left off", code: "Same memory graph, different editor" },
+      { n: "3", label: "Codex & Antigravity too", code: "Every MCP agent reads and writes the same graph" },
+      { n: "4", label: "All writes go to one place", code: "save_memory -> HydraDB -> available everywhere" },
     ],
   },
   {
     number: "02",
-    tag: "MCP · All IDEs",
+    tag: "MCP · all IDEs",
     title: "Every coding agent",
     description:
-      "Install the MCP server once. Register it with Claude Code, Cursor, Codex, Antigravity — or any IDE that speaks MCP. Set IMPRINT_PLATFORM and every agent silently recalls your full context at session start.",
-    cta: "Install MCP →",
+      "Install the MCP server once. Register it with Claude Code, Cursor, Codex, Antigravity, or any IDE that speaks MCP. Set IMPRINT_PLATFORM and every agent silently recalls your full context at session start.",
+    cta: "Install MCP",
     href: "https://github.com/YashasviThakur/imprint#mcp-server-setup",
-    accent: "#cf8f6d",
-    detail: "Claude Code · Cursor · Codex · Antigravity · Custom",
+    accent: "var(--ledger)",
+    detail: "Claude Code, Cursor, Codex, Antigravity, custom",
     steps: [
       { n: "1", label: "Clone & install once", code: "cd mcp && npm install" },
       { n: "2", label: "Register with your IDE", code: "claude mcp add imprint -- node /path/to/server.js\n# or add to .cursor/mcp.json, codex.json, etc." },
-      { n: "3", label: "Tag the platform", code: "IMPRINT_PLATFORM=cursor   # or claude-code, codex…\nIMPRINT_USER_ID=your-id" },
-      { n: "4", label: "Switch IDEs freely", code: "All agents share the same memory store —\nswitch editors without losing context" },
+      { n: "3", label: "Tag the platform", code: "IMPRINT_PLATFORM=cursor   # or claude-code, codex\nIMPRINT_USER_ID=your-id" },
+      { n: "4", label: "Switch IDEs freely", code: "All agents share the same memory graph.\nSwitch editors without losing context." },
     ],
   },
 ];
 
-function StepBlock({ step, accent }: { step: typeof TIERS[0]["steps"][0]; accent: string }) {
+function StepBlock({ step, accent }: { step: typeof PANELS[0]["steps"][0]; accent: string }) {
   return (
     <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
       <div style={{
-        width: 22, height: 22, borderRadius: "50%", flexShrink: 0,
-        background: `${accent}18`, border: `1px solid ${accent}44`,
+        width: 20, height: 20, flexShrink: 0,
+        background: "var(--surface-2)", border: `1px solid var(--rule)`,
         display: "flex", alignItems: "center", justifyContent: "center",
-        fontSize: 10, fontWeight: 700, color: accent, marginTop: 2,
+        fontSize: 10, fontWeight: 600, color: accent, marginTop: 2,
       }}>
         {step.n}
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 11, color: "rgba(255,255,255,0.55)", marginBottom: 4, fontWeight: 500 }}>
+        <div style={{ fontSize: 11, color: "var(--ink-dim)", marginBottom: 4, fontWeight: 500 }}>
           {step.label}
         </div>
         <pre style={{
           fontSize: 10, lineHeight: 1.6,
-          color: "rgba(255,255,255,0.35)",
-          background: "rgba(0,0,0,0.3)",
-          border: "1px solid rgba(255,255,255,0.06)",
-          borderRadius: 8, padding: "8px 10px",
+          color: "var(--ink-dim)",
+          background: "var(--bg)",
+          border: "1px solid var(--rule)",
+          padding: "8px 10px",
           whiteSpace: "pre-wrap", wordBreak: "break-word",
-          margin: 0, fontFamily: "monospace",
+          margin: 0, fontFamily: "var(--font-mono)",
         }}>
           {step.code}
         </pre>
@@ -77,83 +77,79 @@ export default function TiersSection() {
   const [expanded, setExpanded] = useState<number | null>(null);
 
   return (
-    <section className="py-28 md:py-40 px-6 overflow-hidden relative">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_rgba(78,236,216,0.03)_0%,_transparent_60%)] pointer-events-none" />
-      <div className="max-w-6xl mx-auto relative z-10" ref={ref}>
+    <section className="py-24 md:py-32 px-6 border-t" style={{ borderColor: "var(--rule)" }}>
+      <div className="max-w-6xl mx-auto" ref={ref}>
 
-        <div className="flex justify-between items-baseline mb-16">
+        <div className="flex justify-between items-baseline mb-14">
           <motion.h2
             initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
             transition={{ duration: 0.8 }}
-            className="text-3xl md:text-5xl text-white tracking-tight"
-            style={{ fontFamily: "'Instrument Serif', serif" }}
+            className="text-3xl md:text-5xl tracking-tight"
+            style={{ fontFamily: "var(--font-display)", color: "var(--ink)" }}
           >
-            One memory layer,{" "}
-            <em className="italic text-white/40 font-light">every coding agent.</em>
+            One memory layer, every coding agent.
           </motion.h2>
-          <span className="hidden md:block text-white/30 text-sm">One store, all tools</span>
+          <span className="hidden md:block text-sm" style={{ color: "var(--ink-dim)" }}>One store, all tools</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {TIERS.map((tier, i) => {
+          {PANELS.map((panel, i) => {
             const isOpen = expanded === i;
             return (
               <motion.div
-                key={tier.number}
+                key={panel.number}
                 initial={{ opacity: 0, y: 50 }}
                 animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
                 transition={{ duration: 0.7, delay: i * 0.12 }}
-                className="liquid-glass rounded-3xl flex flex-col group hover:border-white/10 transition-colors duration-300"
-                style={{ borderTop: `1px solid ${tier.accent}22` }}
+                className="flex flex-col border"
+                style={{ borderColor: "var(--rule)", borderRadius: 3, background: "var(--surface)" }}
               >
-                {/* Main card content */}
                 <div className="p-7 md:p-8 flex flex-col gap-6">
                   <div className="flex items-start justify-between">
                     <span
-                      className="text-4xl font-light tracking-tighter"
-                      style={{ color: tier.accent, opacity: 0.35, fontFamily: "'Instrument Serif', serif" }}
+                      className="text-3xl font-light tracking-tighter"
+                      style={{ color: panel.accent, opacity: 0.5, fontFamily: "var(--font-mono)" }}
                     >
-                      {tier.number}
+                      {panel.number}
                     </span>
                     <span
-                      className="text-xs tracking-widest uppercase px-3 py-1 rounded-full border"
-                      style={{ color: tier.accent, borderColor: `${tier.accent}33`, background: `${tier.accent}0d` }}
+                      className="text-xs tracking-widest uppercase px-2 py-1 border"
+                      style={{ color: panel.accent, borderColor: "var(--rule)", fontFamily: "var(--font-mono)" }}
                     >
-                      {tier.tag}
+                      {panel.tag}
                     </span>
                   </div>
 
                   <div>
                     <h3
-                      className="text-white text-2xl md:text-3xl mb-3 tracking-tight"
-                      style={{ fontFamily: "'Instrument Serif', serif" }}
+                      className="text-2xl md:text-3xl mb-3 tracking-tight"
+                      style={{ fontFamily: "var(--font-display)", color: "var(--ink)" }}
                     >
-                      {tier.title}
+                      {panel.title}
                     </h3>
-                    <p className="text-white/50 text-sm leading-relaxed">{tier.description}</p>
+                    <p className="text-sm leading-relaxed" style={{ color: "var(--ink-dim)" }}>{panel.description}</p>
                   </div>
 
-                  <div className="pt-4 border-t border-white/[0.06] flex items-center justify-between">
-                    <span className="text-white/30 text-xs">{tier.detail}</span>
+                  <div className="pt-4 border-t flex items-center justify-between" style={{ borderColor: "var(--rule)" }}>
+                    <span className="text-xs" style={{ color: "var(--ink-dim)" }}>{panel.detail}</span>
                     <a
-                      href={tier.href}
+                      href={panel.href}
                       className="text-sm font-medium transition-opacity hover:opacity-70"
-                      style={{ color: tier.accent }}
+                      style={{ color: panel.accent }}
                     >
-                      {tier.cta}
+                      {panel.cta}
                     </a>
                   </div>
                 </div>
 
-                {/* How it works toggle */}
-                <div style={{ borderTop: `1px solid rgba(255,255,255,0.05)` }}>
+                <div style={{ borderTop: `1px solid var(--rule)` }}>
                   <button
                     onClick={() => setExpanded(isOpen ? null : i)}
                     style={{
                       width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between",
                       padding: "12px 28px", background: "transparent", border: "none", cursor: "pointer",
-                      color: isOpen ? tier.accent : "rgba(255,255,255,0.3)",
+                      color: isOpen ? panel.accent : "var(--ink-dim)",
                       fontSize: 12, fontWeight: 500, transition: "color 0.2s",
                     }}
                   >
@@ -163,7 +159,7 @@ export default function TiersSection() {
                       transition={{ duration: 0.25 }}
                       style={{ display: "inline-block", fontSize: 14 }}
                     >
-                      ↓
+                      &darr;
                     </motion.span>
                   </button>
 
@@ -181,8 +177,8 @@ export default function TiersSection() {
                           padding: "4px 28px 24px",
                           display: "flex", flexDirection: "column", gap: 14,
                         }}>
-                          {tier.steps.map(step => (
-                            <StepBlock key={step.n} step={step} accent={tier.accent} />
+                          {panel.steps.map(step => (
+                            <StepBlock key={step.n} step={step} accent={panel.accent} />
                           ))}
                         </div>
                       </motion.div>

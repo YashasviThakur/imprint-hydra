@@ -13,6 +13,7 @@ import path from "node:path";
 import { extractMemories } from "../lib/extract";
 import { detectSemanticContradictions } from "../lib/contradiction";
 import { llmComplete } from "../lib/llm";
+import { rankByRelevance } from "../lib/relevance";
 import {
   ensureSession,
   saveMemory,
@@ -126,7 +127,14 @@ async function runInstance(inst: Instance, runId: string) {
     abstained = true;
   } else if (GROQ_KEY) {
     await paceLLMCall();
-    const facts = candidateFacts
+    // Narrow to the most query-relevant facts before answering — dumping
+    // every current fact (60-83 at full scale) to an 8B model with no
+    // ranking is the documented cause of the full-scale accuracy drop.
+    // Re-sort the narrowed set back into chronological order for the prompt.
+    const relevant = rankByRelevance(candidateFacts, inst.question, 25)
+      .slice()
+      .sort((a, b) => (a.ts < b.ts ? -1 : 1));
+    const facts = relevant
       .map((f) => `- [${f.ts}] ${f.content}`)
       .join("\n");
     const system =
