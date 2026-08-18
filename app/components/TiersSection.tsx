@@ -13,12 +13,12 @@ const TIERS = [
     cta: "See how it connects →",
     href: "#install",
     accent: "#4eecd8",
-    detail: "One DynamoDB store · all tools share it",
+    detail: "One DynamoDB store, mirrored to HydraDB · all tools share it",
     steps: [
       { n: "✦", label: "Claude Code remembers", code: "get_memories → injects context at session start" },
       { n: "✦", label: "Cursor picks up where you left off", code: "Same memory store, different editor" },
       { n: "✦", label: "Codex & Antigravity too", code: "Every MCP agent reads and writes the same store" },
-      { n: "✦", label: "All writes go to one place", code: "save_memory → DynamoDB → available everywhere" },
+      { n: "✦", label: "All writes go to one place", code: "save_memory → DynamoDB + HydraDB → available everywhere" },
     ],
   },
   {

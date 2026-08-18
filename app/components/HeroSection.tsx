@@ -93,7 +93,7 @@ export default function HeroSection() {
 
       {/* Social footer */}
       <div className="relative z-10 flex flex-wrap justify-center gap-4 md:gap-6 pb-12 text-xs text-white/40 px-6">
-        <span>Vercel AI SDK Integration</span>
+        <span>Backed by a HydraDB Graph</span>
         <span>•</span>
         <span>AWS Serverless Infrastructure</span>
         <span>•</span>

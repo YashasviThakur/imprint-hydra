@@ -52,9 +52,9 @@ export default function PhilosophySection() {
               </p>
               <p className="text-white/70 text-base md:text-lg leading-relaxed">
                 By separating state from the raw model layer, Imprint makes your AI
-                assistant natively stateful. We deploy specialized database nodes inside your
-                private cloud, ensuring your operational context never enters public
-                training loops.
+                assistant natively stateful. Every fact is written into DynamoDB and
+                mirrored as a node in a HydraDB graph, so state lives outside the
+                model and outside any single table.
               </p>
             </div>
 
@@ -62,12 +62,13 @@ export default function PhilosophySection() {
 
             <div>
               <p className="text-white/40 text-xs tracking-widest uppercase mb-4">
-                Serverless Hydration
+                Graph-Backed Hydration
               </p>
               <p className="text-white/70 text-sm md:text-base leading-relaxed">
-                When a prompt is initialized, our Vercel Edge middleware performs a
-                semantic vector lookup across AWS, injecting highly relevant historical
-                schemas into the prompt context prior to model generation.
+                When you ask what your assistant remembers, /api/ask-graph walks
+                the HydraDB graph for the current, non-superseded facts about you and
+                grounds the answer in exactly those — never in a fact that's since
+                been corrected.
               </p>
             </div>
           </motion.div>

@@ -8,9 +8,9 @@ const VIDEO_CARDS = [
     videoUrl:
       "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4",
     tag: "Memory Storage",
-    title: "AWS DynamoDB + Groq Extraction",
+    title: "DynamoDB Write + HydraDB Graph Mirror",
     description:
-      "Memories are extracted by Groq's gpt-oss-120b in real-time and stored in serverless DynamoDB — pinned facts, topic filters, and contradiction detection built in.",
+      "Memories are extracted by Groq's gpt-oss-120b in real-time, written to serverless DynamoDB, and dual-written into a HydraDB graph — pinned facts, topic filters, and contradiction detection built in.",
   },
   {
     videoUrl:
@@ -18,7 +18,7 @@ const VIDEO_CARDS = [
     tag: "Session Management",
     title: "Amazon DynamoDB Isolation",
     description:
-      "State storage utilizing low-latency serverless Amazon DynamoDB tables for instant execution. Complete user control over encryption keys and memory pruning.",
+      "State storage utilizing low-latency serverless Amazon DynamoDB tables for instant execution, with every write mirrored into HydraDB for graph-aware recall. Complete user control over encryption keys and memory pruning.",
   },
 ];
 
@@ -30,7 +30,7 @@ const ICON_CARDS = [
     tag: "Real-time Sync",
     title: "Cross-IDE Memory Graph",
     description:
-      "Every memory saved — whether from Claude Code, Cursor, Codex, or Antigravity — lands in the same DynamoDB table. A live dashboard polls every 3 seconds, animating new memories as they arrive.",
+      "Every memory saved — whether from Claude Code, Cursor, Codex, or Antigravity — lands in the same DynamoDB table and the same HydraDB graph. A live dashboard polls every 3 seconds, animating new memories as they arrive.",
   },
   {
     glyph: "◎",
@@ -111,7 +111,7 @@ export default function ServicesSection() {
           >
             Core Pipeline
           </h2>
-          <span className="hidden md:block text-white/40 text-sm">AWS Native · Jina AI · Groq</span>
+          <span className="hidden md:block text-white/40 text-sm">HydraDB · AWS · Jina AI · Groq</span>
         </div>
 
         {/* Video cards */}

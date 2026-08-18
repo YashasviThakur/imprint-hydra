@@ -34,8 +34,9 @@ export default function FeaturedVideoSection() {
               </p>
               <p className="text-white text-sm md:text-base leading-relaxed">
                 As you work with your AI assistant, Imprint&apos;s background
-                engine streams message vectors directly into an isolated AWS serverless
-                database, creating a permanent recall layer.
+                engine writes facts into DynamoDB and mirrors them into a HydraDB
+                graph in the same pass, creating a permanent, relationship-aware
+                recall layer.
               </p>
             </div>
 

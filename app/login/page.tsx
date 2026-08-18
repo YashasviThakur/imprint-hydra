@@ -64,7 +64,7 @@ export default function LoginPage() {
         </h1>
 
         <p className="text-white/40 text-sm mb-10 max-w-xs leading-relaxed">
-          Persistent memory for Claude Code, Cursor, Codex — and every AI in your browser.
+          Graph-backed memory on HydraDB, for Claude Code, Cursor, Codex — and every AI in your browser.
         </p>
 
         {/* Single CTA */}
