@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import MemoryGraphSection from "@/app/components/MemoryGraphSection";
+import BackgroundVideo from "@/app/components/BackgroundVideo";
 
 // Same shape MemoryGraphSection expects: id/content/topic/pinned + a _raw
 // blob carrying confidence and contradicts (mirrors dashboard/page.tsx's
@@ -42,8 +43,12 @@ export default function MemoryGraphPage() {
   }, [userId]);
 
   return (
-    <div style={{ minHeight: "100vh", background: "#050505", padding: "24px 24px 60px" }}>
-      <div style={{ maxWidth: 1040, margin: "0 auto" }}>
+    <div style={{ position: "relative", minHeight: "100vh", background: "#050505", padding: "24px 24px 60px", overflow: "hidden" }}>
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <BackgroundVideo overlayOpacity={0.6} />
+      </div>
+
+      <div style={{ position: "relative", zIndex: 10, maxWidth: 1040, margin: "0 auto" }}>
         <Link
           href="/dashboard"
           style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "rgba(255,255,255,0.4)", fontSize: 13, textDecoration: "none", marginBottom: 20 }}
