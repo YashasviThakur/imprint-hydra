@@ -2,12 +2,15 @@
 
 import { useState, useEffect, useRef } from "react";
 
+// Matches app/dashboard/page.tsx's TOPIC_META exactly — a memory tagged
+// "health" should be the same color here as it is on the memory list, not
+// a different one just because it's rendered as a node instead of a card.
 const TOPIC_COLORS: Record<string, string> = {
-  projects:      "#7c3aed",
-  work:          "#0070f3",
-  preferences:   "#d97706",
-  personal:      "#059669",
-  health:        "#e11d48",
+  projects:      "#818cf8",
+  work:          "#f472b6",
+  preferences:   "#fb923c",
+  personal:      "#fbbf24",
+  health:        "#a3e635",
   relationships: "#8b5cf6",
   general:       "#6b7280",
 };
@@ -98,7 +101,7 @@ export default function MemoryGraphSection({ memories }: { memories: any[] }) {
   return (
     <div style={{ animation: "fade-in 0.3s ease both" }}>
       <div style={{ marginBottom: 22 }}>
-        <h1 style={{ fontSize: 24, fontWeight: 700, color: "rgba(255,255,255,0.9)", letterSpacing: "-0.02em", marginBottom: 4 }}>Memory Graph</h1>
+        <h1 style={{ fontSize: 24, fontWeight: 700, color: "rgba(255,255,255,0.9)", letterSpacing: "-0.02em", marginBottom: 4, fontFamily: "Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif" }}>Memory Graph</h1>
         <p style={{ fontSize: 13.5, color: "rgba(255,255,255,0.3)" }}>
           Force-directed view of your memory store — clusters by topic, red dashed edges show contradictions
         </p>
@@ -106,7 +109,7 @@ export default function MemoryGraphSection({ memories }: { memories: any[] }) {
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 260px", gap: 14 }}>
         {/* Canvas */}
-        <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, overflow: "hidden" }}>
+        <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 18, overflow: "hidden", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}>
           <svg width="100%" viewBox={`0 0 ${W} ${H}`} style={{ display: "block" }}>
             <defs>
               <radialGradient id="bg" cx="50%" cy="50%" r="60%">
@@ -153,7 +156,7 @@ export default function MemoryGraphSection({ memories }: { memories: any[] }) {
         {/* Side panel */}
         <div style={{ display: "flex", flexDirection: "column" as const, gap: 10 }}>
           {/* Legend */}
-          <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 12, padding: "13px 15px" }}>
+          <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: "13px 15px", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}>
             <p style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.25)", textTransform: "uppercase" as const, letterSpacing: "0.08em", marginBottom: 10 }}>Topics</p>
             {Object.entries(TOPIC_COLORS).map(([t, c]) => (
               <div key={t} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
@@ -174,19 +177,19 @@ export default function MemoryGraphSection({ memories }: { memories: any[] }) {
 
           {/* Selected memory */}
           {sel ? (
-            <div style={{ background: "rgba(255,255,255,0.02)", border: `1px solid ${TOPIC_COLORS[sel.topic] || "#6b7280"}33`, borderRadius: 12, padding: "13px 15px", flex: 1 }}>
+            <div style={{ background: "rgba(255,255,255,0.04)", border: `1px solid ${TOPIC_COLORS[sel.topic] || "#6b7280"}44`, borderRadius: 14, padding: "13px 15px", flex: 1, backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}>
               <p style={{ fontSize: 10, fontWeight: 600, color: TOPIC_COLORS[sel.topic] || "#6b7280", textTransform: "uppercase" as const, letterSpacing: "0.08em", marginBottom: 8 }}>{sel.topic}</p>
               <p style={{ fontSize: 12.5, color: "rgba(255,255,255,0.72)", lineHeight: 1.55, margin: 0 }}>{sel.content}</p>
               <p style={{ fontSize: 10.5, color: "rgba(255,255,255,0.18)", marginTop: 10 }}>{new Date(sel.createdAt).toLocaleDateString()}</p>
             </div>
           ) : (
-            <div style={{ background: "rgba(255,255,255,0.015)", border: "1px solid rgba(255,255,255,0.04)", borderRadius: 12, padding: "13px 15px", flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 14, padding: "13px 15px", flex: 1, display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}>
               <p style={{ fontSize: 12, color: "rgba(255,255,255,0.18)", textAlign: "center" as const }}>Click a node<br/>to inspect it</p>
             </div>
           )}
 
           {/* Counts */}
-          <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 12, padding: "12px 15px" }}>
+          <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: "12px 15px", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
               <span style={{ fontSize: 11, color: "rgba(255,255,255,0.25)" }}>Nodes</span>
               <span style={{ fontSize: 11, color: "rgba(255,255,255,0.55)", fontWeight: 600 }}>{nodes.length}</span>
