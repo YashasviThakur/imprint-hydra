@@ -59,6 +59,26 @@ everything HydraDB-related below.
 - **`getGraphStats`** — total current facts, superseded facts, and distinct
   entities via HydraDB's `count()`/`collect()` aggregates, surfaced in
   `/api/ask-graph`'s response.
+- **`lib/relevance.ts`** — keyword-overlap ranking that narrows to the 25
+  most query-relevant current facts before the answer step, instead of
+  handing an 8B model every fact a user has. Deliberately not
+  embedding-based: HydraDB's property values are ints, floats, booleans,
+  and strings only (no array/list type), so a fact's vector can't live on
+  the node and be searched in the graph — this is the retrieval option
+  actually available against this database.
+- **The homepage explains and shows the real graph**, not just claims one.
+  A dedicated section renders the actual write model —
+  `(:Session)-[:CONTAINS]->(:Memory)-[:ABOUT]->(:Entity)` with a
+  `SUPERSEDES` edge between an old fact and its replacement — next to the
+  measured read/write cost from the benchmark run, and the "Built With"
+  stack (previously all-DynamoDB, no HydraDB mention at all) now lists it.
+- **`app/dashboard/graph`** — a force-directed visualization of a signed-in
+  user's actual memories (`app/components/MemoryGraphSection.tsx`): nodes
+  colored by topic, dashed red edges drawn between contradicting facts.
+  It existed in the codebase, unused and unreachable from any page, before
+  this pass — now it's wired to real `/api/memories` data and linked from
+  the dashboard header, so a `SUPERSEDES` correction is something you can
+  watch appear on screen, not just read about.
 
 ## Why a graph here, not just a bigger vector index
 
